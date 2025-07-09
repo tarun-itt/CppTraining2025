@@ -55,14 +55,14 @@ double custom_atof(const std::string str){
 
         if((ch=='e'||ch=='E') && ((flag&4)==4)){
             break;
-        }else{
+        }else  if((ch=='e'||ch=='E') && ((flag&4)!=4)){
             flag = flag | 4;
             continue;
         }
 
         if(ch=='+' && ((flag&8)==8)){
             break;
-        }else{
+        }else if(ch=='+' && ((flag&8)!=0)){
             flag = flag | 8;
             expSign = 1;
             continue;
@@ -70,7 +70,7 @@ double custom_atof(const std::string str){
 
         if(ch=='-' && ((flag&8)==8)){
             break;
-        }else{
+        }else if(ch=='-' && ((flag&8)==8)){
             flag = flag | 8;
             expSign = -1;
             continue;
@@ -83,13 +83,19 @@ double custom_atof(const std::string str){
     }
 
     double result = (num+(afterDecimal/pow(10,decimalPlaces)));
-    result = result*pow(10,(expSign*expNums));
+    
+
+    double mult = pow(10,expNums);
+
+    result = expSign == 1 ? result*mult:result/mult;
+    
     return result*sign;
 }
 
 int main(){
-    std::setprecision(9);
-   std::cout<<custom_atof("    1000.312")<<"\n";
+
+  // custom_atof("     1000.312");
+  std::cout<< std::setprecision(9)<<custom_atof("    -1000.312e3")<<"\n";
 
     return 0;
 }
