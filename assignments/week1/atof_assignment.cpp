@@ -3,18 +3,73 @@
 #include <cmath>
 #include <iomanip>
 
-bool isDigit(char ch)
+int flag = 0; // 0 0 0 0 => exponentSign, exponent, dot, sign
+
+enum class ParseResult
 {
-    return (ch >= 48 && ch <= 57); // checks the ascii range of numerical digits
+    FALSE,
+    TRUE,
+    INVALID
+};
+
+enum FlagBits
+{
+    SIGN = 1 << 0,
+    DOT = 1 << 1,
+    EXPONENT = 1 << 2,
+    EXP_SIGN = 1 << 3
+};
+
+bool isDigit(char currentChar)
+{
+    return (currentChar >= '0' && currentChar <= '9');
 }
 
-bool isSpace(char ch)
+bool isLeadingSpace(char currentChar)
 {
-    return ch == ' ';
+    return currentChar == ' ' && (flag == 0); // all flag bits should be 0
 }
 
-// bool flags[] = {0, 0, 0, 0}; //sign, dot, exponent, sign2
-int flag = 0; // 0 0 0 0 => expSing, exponent, dot, sign
+ParseResult handleNumSign(char currentChar, double &sign, double num)
+{
+    ParseResult result = ParseResult::FALSE;
+    if ((currentChar == '+' || currentChar == '-'))
+    {
+        if (flag == 0 && num == 0.0)
+        {
+            sign = currentChar == '+' ? 1.0 : -1.0;
+            flag |= FlagBits::SIGN; // sets the number sign bit
+            result = ParseResult::TRUE;
+        }
+        else if ((flag & FlagBits::SIGN) != 0 && num == 0.0)
+        {
+            result = ParseResult::INVALID;
+        }
+    }
+
+    return result;
+}
+
+ParseResult handleExponentSign(char currentChar, int &exponentSign)
+{
+    ParseResult result = ParseResult::FALSE;
+
+    // checks exponent flag bit should be set and exponentSign bit should not be set
+    if ((currentChar == '+' || currentChar == '-'))
+    {
+        if ((flag & FlagBits::EXPONENT) && (flag & FlagBits::EXP_SIGN) == 0)
+        {
+            exponentSign = currentChar == '+' ? 1 : -1;
+            flag |= FlagBits::EXP_SIGN; // sets the exponent sign flag-bit
+            result = ParseResult::TRUE;
+        }
+        else
+        {
+            result = ParseResult::INVALID;
+        }
+    }
+    return result;
+}
 
 double custom_atof(const std::string str)
 {
@@ -25,94 +80,63 @@ double custom_atof(const std::string str)
     int expNums = 0;
     double sign = 1.0;
 
-    for (char ch : str)
+    for (char currentChar : str)
     {
-        if (isSpace(ch) && ((flag & 15) == 0))
+        if (isLeadingSpace(currentChar))
+        {
             continue;
-        else if (isspace(ch) && ((flag & 15) != 0))
+        }
+
+        ParseResult signResult = handleNumSign(currentChar, sign, num);
+        if (signResult == ParseResult::TRUE)
+        {
+            continue;
+        }
+        else if (signResult == ParseResult::INVALID)
         {
             break;
         }
 
-        if (ch == '+' && ((flag & 1) == 0) && num == 0.0)
+        if (currentChar == '.' && ((flag & FlagBits::DOT) == 0))
         {
-            sign = 1.0;
-            flag = (flag | 1);
+            flag |= 2;
             continue;
         }
-        else if (ch == '+' && ((flag & 1) != 0) && num == 0.0)
+        else if ((currentChar == 'e' || currentChar == 'E') && ((flag & FlagBits::EXPONENT) == 0))
+        {
+            flag |= FlagBits::EXPONENT; // sets exponent bit
+            flag |= FlagBits::SIGN; // sets num bit (in case sign was not entered by user)
+            continue;
+        }
+
+        ParseResult expSignResult = handleExponentSign(currentChar, expSign);
+        if (expSignResult == ParseResult::TRUE)
+        {
+            continue;
+        }
+        else if (expSignResult == ParseResult::INVALID)
         {
             break;
         }
 
-        if (ch == '-' && ((flag & 1) == 0) && num == 0.0)
+        if ((flag & FlagBits::EXPONENT) == FlagBits::EXPONENT && isDigit(currentChar))
         {
-            sign = 1.0;
-            flag = (flag | 1);
+            expNums = (expNums * 10) + (currentChar - '0');
             continue;
         }
-        else if (ch == '-' && ((flag & 1) != 0) && num == 0.0)
+        else if (isDigit(currentChar) && ((flag & FlagBits::DOT) == 0))
         {
-            break;
-        }
-
-        if (ch == '.' && ((flag & 2) == 0))
-        {
-            flag = (flag | 2);
+            num = (num * 10) + (currentChar - '0');
             continue;
         }
-        else if (ch == '.' && ((flag & 2) != 0))
-        {
-            break;
-        }
-
-        if ((ch == 'e' || ch == 'E') && ((flag & 4) != 0))
-        {
-            break;
-        }
-        else if ((ch == 'e' || ch == 'E') && ((flag & 4) == 0))
-        {
-            flag = flag | 4;
-            continue;
-        }
-
-        if (ch == '+' && ((flag & 8) != 0))
-        {
-            break;
-        }
-        else if (ch == '+' && (flag & 4) && ((flag & 8) != 0))
-        {
-            flag = flag | 8;
-            expSign = 1;
-            continue;
-        }
-
-        if (ch == '-' && ((flag & 8) == 8))
-        {
-            break;
-        }
-        else if (ch == '-' && (flag & 4) && ((flag & 8) == 0))
-        {
-            flag = flag | 8;
-            expSign = -1;
-            continue;
-        }
-
-        if ((flag & 4) == 4 && isDigit(ch))
-        {
-            expNums = (expNums * 10) + (ch - '0');
-            continue;
-        }
-
-        if (isDigit(ch) && ((flag & 2) == 0))
-        {
-            num = (num * 10) + (ch - '0');
-            continue;
-        }
-        else if (isDigit(ch) && ((flag & 2) != 0))
+        else if (isDigit(currentChar) && ((flag & FlagBits::DOT) != 0))
         {
             decimalPlaces++;
-            afterDecimal = (afterDecimal * 10) + (ch - '0');
+            afterDecimal = (afterDecimal * 10) + (currentChar - '0');
+        }
+        else
+        {
+            break;
         }
     }
 
@@ -126,7 +150,7 @@ double custom_atof(const std::string str)
 int main()
 {
     std::string input;
-    std::cout << "Input: " << input;
+    std::cout << "Input: ";
     std::cin >> input;
 
     std::cout << std::setprecision(16) << custom_atof(input) << std::endl;
