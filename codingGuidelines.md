@@ -1,0 +1,14 @@
+# Coding Guideline
+- Name of files: CamelCase
+- All names should be descriptive, apart from iteration variables?
+- user defined data types like class, struct etc should follow capital CamelCase
+- variable and function names in lower camelCase
+- global variable names, : camelCase
+- variable, class, and function comments come before the commented component.
+- Indent each nested block with a tab.
+- Horizontal whitespace: Use 1 space around (most) operators. E.g., `x = y + z` as opposed to `x=y+z`. Exceptions: `.`, `->`, `++`, and `--`. Put 1 space before every opening `{` curly brace. Do *not* put a space between a function name and its argument or parameter list. E.g., write `Function(arg1, arg2)`, not `Function (arg1, arg2)`.
+- **Vertical whitespace:** Use 1 (or a few) blank lines between functions/classes etc., as well as between related sections of code within a function (sort of like paragraph breaks in writing).
+- Should classes be declared and implemented in separate files, `.h` and `.cpp`
+- Class member variables and methods should also follow lower camelCase?
+- should we use separate directories for header and implementation files
+- no extra lines at end of files
