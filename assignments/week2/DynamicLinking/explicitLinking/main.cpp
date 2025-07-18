@@ -84,7 +84,7 @@ void init(Operators& mathFunction){
 }
 
 int main(){
-    void* handle = dlopen("./libmathOperations.so", RTLD_LAZY);
+    void* handle = dlopen("../lib/libmathOperations.so", RTLD_LAZY);
     if (!handle)
     {
         std::cout << "Cannot open library: " << dlerror() << '\n';
@@ -96,11 +96,9 @@ int main(){
     mathFunction.subtractPtr = (double (*)(double, double))dlsym(handle,"subtract");
     mathFunction.multiplyPtr = (double (*)(double, double))dlsym(handle,"multiply");
     mathFunction.dividePtr = (double (*)(double, double))dlsym(handle,"divide");
-
     init(mathFunction);
 
     dlclose(handle);
 
     return 0;
 }
-
