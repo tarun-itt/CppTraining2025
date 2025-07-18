@@ -1,10 +1,9 @@
 #include "../include/mathOperations.h"
 #include <iostream>
 #include <limits>
-#include <string>
 
 
-double handleInput(std::string message){
+double handleInput(const char* message){
     double input = 0;
     
     while (true) {
