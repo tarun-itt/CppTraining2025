@@ -24,8 +24,7 @@ double handleInput(std::string message){
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         } else {
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            return input;
+            break;
         }
     }
     return input;
