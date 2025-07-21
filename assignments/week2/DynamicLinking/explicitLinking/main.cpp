@@ -11,6 +11,13 @@ struct Operators
     double (*dividePtr)(double, double);
 };
 
+enum MenuOptions{
+    ADD = 1,
+    SUBTRACT,
+    MULTIPLY,
+    DIVIDE,
+    EXIT
+};
 
 double handleInput(std::string message){
     double input = 0;
@@ -24,13 +31,14 @@ double handleInput(std::string message){
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         } else {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             break;
         }
     }
     return input;
 }
 
-void init(Operators& mathFunction){
+void runCalculator(Operators& mathFunction){
     int choice;
     double num1 = 0.0, num2 = 0.0;
     double result;
@@ -41,45 +49,53 @@ void init(Operators& mathFunction){
         std::cout<<" Press 3 to Multiply\n";
         std::cout<<" Press 4 to Divide\n";
         std::cout<<" Press 5 to Exit\n";
-        std::cout<<"\n Choice: ";
+        std::cout<<"\nChoice: ";
         choice = static_cast<int>(handleInput("Choice"));
 
 
         switch (choice)
         {
-            case 1: {
+            case MenuOptions::ADD: {
                 num1 = handleInput("first number");
                 num2 = handleInput("second number");
                 result = mathFunction.addPtr(num1, num2);
-                std::cout<<"Result: "<<result<<"\n";
             }
                 break;
-            case 2: {
+            case MenuOptions::SUBTRACT: {
                 num1 = handleInput("first number");
                 num2 = handleInput("second number");
                 result = mathFunction.subtractPtr(num1, num2);
-                std::cout<<"Result: "<<result<<"\n";
             }
                 break;
-            case 3: {
+            case MenuOptions::MULTIPLY: {
                 num1 = handleInput("multiplicant");
                 num2 = handleInput("multiplier");
                 result = mathFunction.multiplyPtr(num1, num2);
-                std::cout<<"Result: "<<result<<"\n";
             }
                 break;
-            case 4: {
+            case MenuOptions::DIVIDE: {
                 num1 = handleInput("dividend");
-                num2 = handleInput("divisor");
+                while(true){
+                    num2 = handleInput("divisor");
+                    if (num2 == 0.0){
+                        std::cout << "Divisor cannot be zero. Please try again.\n";
+                    }else{
+                        break;
+                    }
+                }   
                 result = mathFunction.dividePtr(num1, num2);
-                std::cout<<"Result: "<<result<<"\n";
+                
             }
                 break;
             default:
+                std::cout<<"Please enter a valid choice (1-5).\n\n";
                 break;
         }
+
+        if(choice>=MenuOptions::ADD && choice<MenuOptions::EXIT)
+            std::cout<<"Result: "<<result<<"\n";
         
-    }while(choice != 5);
+    }while(choice != MenuOptions::EXIT);
 }
 
 int main(){
@@ -95,7 +111,7 @@ int main(){
     mathFunction.subtractPtr = (double (*)(double, double))dlsym(handle,"subtract");
     mathFunction.multiplyPtr = (double (*)(double, double))dlsym(handle,"multiply");
     mathFunction.dividePtr = (double (*)(double, double))dlsym(handle,"divide");
-    init(mathFunction);
+    runCalculator(mathFunction);
 
     dlclose(handle);
 

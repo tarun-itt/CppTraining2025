@@ -1,6 +1,15 @@
-#include "../include/mathOperations.h"
 #include <iostream>
 #include <limits>
+
+#include "mathOperations.h"
+
+enum MenuOptions{
+    ADD = 1,
+    SUBTRACT,
+    MULTIPLY,
+    DIVIDE,
+    EXIT
+};
 
 
 double handleInput(const char* message){
@@ -15,13 +24,14 @@ double handleInput(const char* message){
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         } else {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             break;
         }
     }
     return input;
 }
 
-void init(){
+void runCalculator(){
     int choice;
     double num1 = 0.0, num2 = 0.0;
     double result;
@@ -32,49 +42,56 @@ void init(){
         std::cout<<" Press 3 to Multiply\n";
         std::cout<<" Press 4 to Divide\n";
         std::cout<<" Press 5 to Exit\n";
-        std::cout<<"\n Choice: ";
+        std::cout<<"\nChoice: ";
         choice = static_cast<int>(handleInput("Choice"));
 
 
         switch (choice)
         {
-            case 1: {
+            case MenuOptions::ADD: {
                 num1 = handleInput("first number");
                 num2 = handleInput("second number");
                 result = add(num1, num2);
-                std::cout<<"Result: "<<result<<"\n";
             }
                 break;
-            case 2: {
+            case MenuOptions::SUBTRACT: {
                 num1 = handleInput("first number");
                 num2 = handleInput("second number");
                 result = subtract(num1, num2);
-                std::cout<<"Result: "<<result<<"\n";
             }
                 break;
-            case 3: {
+            case MenuOptions::MULTIPLY: {
                 num1 = handleInput("multiplicant");
                 num2 = handleInput("multiplier");
                 result = multiply(num1, num2);
-                std::cout<<"Result: "<<result<<"\n";
             }
                 break;
-            case 4: {
+            case MenuOptions::DIVIDE: {
                 num1 = handleInput("dividend");
-                num2 = handleInput("divisor");
+                while(true){
+                    num2 = handleInput("divisor");
+                    if (num2 == 0.0){
+                        std::cout << "Divisor cannot be zero. Please try again.\n";
+                    }else{
+                        break;
+                    }
+                }   
                 result = divide(num1, num2);
-                std::cout<<"Result: "<<result<<"\n";
             }
                 break;
             default:
+                std::cout<<"Please enter a valid choice (1-5).\n\n";
                 break;
         }
+
+        if(choice < MenuOptions::EXIT && choice>=MenuOptions::ADD)
+            std::cout<<"Result: "<<result<<"\n";
         
-    }while(choice != 5);
+    }while(choice != MenuOptions::EXIT);
 }
 
 int main(){
-    init();
+    runCalculator();
 
     return 0;
 }
