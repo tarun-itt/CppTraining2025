@@ -1,0 +1,37 @@
+#include <iostream>
+#include <string>
+
+// T& is an lvalue reference, so this overload will be preferred for lvalues
+template <typename T>
+constexpr bool is_lvalue(T&)
+{
+    return true;
+}
+
+// T&& is an rvalue reference, so this overload will be preferred for rvalues
+template <typename T>
+constexpr bool is_lvalue(T&&)
+{
+    return false;
+}
+
+// A helper macro (#expr prints whatever is passed in for expr as text)
+#define PRINTVCAT(expr) { std::cout << #expr << " is an " << (is_lvalue(expr) ? "lvalue\n" : "rvalue\n"); }
+
+int getint() { return 5; }
+
+int main()
+{
+    PRINTVCAT(5);        // rvalue
+    PRINTVCAT(getint()); // rvalue
+    int x { 5 };
+    PRINTVCAT(x);        // lvalue
+    PRINTVCAT(std::string {"Hello"}); // rvalue
+    PRINTVCAT("Hello");  // lvalue
+    PRINTVCAT(++x);      // lvalue
+    PRINTVCAT(x++);      // rvalue
+
+    int q = 10;
+    std::cout<< (++q)++<<std::endl; // it works, because ++q returns lvalue
+   // std::cout<<(q++)++<<std::endl; //doesnt work because q++ returns rvalue
+}
