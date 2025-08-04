@@ -15,12 +15,12 @@ Matrix::Matrix(const Matrix &other) {
   cols = other.cols;
   data = nullptr;
 
-  if (other.data != nullptr) {
+  if (other.data != nullptr && rows > 0 && cols > 0) {
     data = new double *[rows];
-    for (int i = 0; i < rows; ++i) {
-      data[i] = new double[cols];
-      for (int j = 0; j < cols; ++j) {
-        data[i][j] = other.data[i][j];
+    for (int currentRow = 0; currentRow < rows; ++currentRow) {
+      data[currentRow] = new double[cols];
+      for (int currentCol = 0; currentCol < cols; ++currentCol) {
+        data[currentRow][currentCol] = other.data[currentRow][currentCol];
       }
     }
   }
@@ -28,18 +28,18 @@ Matrix::Matrix(const Matrix &other) {
 
 void Matrix::initialize() {
   if (data != nullptr) {
-    for (int i = 0; i < rows; ++i) {
-      delete[] data[i];
+    for (int currentRow = 0; currentRow < rows; ++currentRow) {
+      delete[] data[currentRow];
     }
     delete[] data;
   }
 
   if (rows > 0 && cols > 0) {
     data = new double *[rows];
-    for (int i = 0; i < rows; ++i) {
-      data[i] = new double[cols];
-      for (int j = 0; j < cols; ++j) {
-        data[i][j] = 0.0;
+    for (int currentRow = 0; currentRow < rows; ++currentRow) {
+      data[currentRow] = new double[cols];
+      for (int currentCol = 0; currentCol < cols; ++currentCol) {
+        data[currentRow][currentCol] = 0.0;
       }
     }
   } else {
@@ -47,29 +47,47 @@ void Matrix::initialize() {
   }
 }
 
-int Matrix::getRows() { return rows; }
+int Matrix::getRows() { 
+  return rows; 
+}
 
-int Matrix::getColumns() { return cols; }
+int Matrix::getColumns() { 
+  return cols; 
+}
 
-void Matrix::setRows(int r) { rows = r; }
+void Matrix::setRows(int rows) { 
+  this->rows = rows; 
+  initialize(); 
+}
 
-void Matrix::setCols(int c) { cols = c; }
+void Matrix::setCols(int cols) { 
+  this->cols = cols; 
+  initialize(); 
+}
 
-bool Matrix::isValid() { return data != nullptr; }
+bool Matrix::isValid() { 
+  return data != nullptr; 
+}
 
 void Matrix::print() {
   if (!isValid()) {
     std::string message = "Matrix must be initialized";
     throw MatrixError(message);
   }
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      std::cout << data[i][j] << " ";
+
+  for (int currentRow = 0; currentRow < rows; currentRow++) {
+    for (int currentCol = 0; currentCol < cols; currentCol++) {
+      std::cout << data[currentRow][currentCol] << " ";
     }
     std::cout << "\n";
   }
 }
-double &Matrix::at(int row, int col) {
+
+double &Matrix::getDataAt(int row, int col) {
+  if (!isValid()) {
+    throw MatrixError("Matrix not initialized");
+  }
+
   if (row < 0 || row >= rows || col < 0 || col >= cols) {
     std::string msg = "Index out of bounds";
     throw MatrixError(msg);
@@ -84,9 +102,9 @@ Matrix Matrix::operator+(const Matrix &other) {
   }
 
   Matrix result(rows, cols);
-  for (int i = 0; i < rows; ++i) {
-    for (int j = 0; j < cols; ++j) {
-      result.data[i][j] = data[i][j] + other.data[i][j];
+  for (int currentRow = 0; currentRow < rows; ++currentRow) {
+    for (int currentCol = 0; currentCol < cols; ++currentCol) {
+      result.data[currentRow][currentCol] = data[currentRow][currentCol] + other.data[currentRow][currentCol];
     }
   }
 
@@ -100,23 +118,23 @@ Matrix Matrix::operator*(const Matrix &other) {
   }
 
   Matrix result(rows, other.cols);
-  for (int i = 0; i < rows; ++i) {
-    for (int j = 0; j < other.cols; ++j) {
-      result.data[i][j] = 0;
-      for (int k = 0; k < cols; ++k) {
-        result.data[i][j] += data[i][k] * other.data[k][j];
+  for (int currentRow = 0; currentRow < rows; ++currentRow) {
+    for (int currentCol = 0; currentCol < other.cols; ++currentCol) {
+      result.data[currentRow][currentCol] = 0;
+      for (int currentCol = 0; currentCol < cols; ++currentCol) {
+        result.data[currentRow][currentCol] += data[currentRow][currentCol] * other.data[currentCol][currentCol];
       }
     }
   }
   return result;
 }
 
-Matrix Matrix::operator=(const Matrix &other) {
+Matrix& Matrix::operator=(const Matrix &other) {
   if (this != &other) {
 
     if (data != nullptr) {
-      for (int i = 0; i < rows; ++i) {
-        delete[] data[i];
+      for (int currentRow = 0; currentRow < rows; ++currentRow) {
+        delete[] data[currentRow];
       }
       delete[] data;
     }
@@ -125,12 +143,12 @@ Matrix Matrix::operator=(const Matrix &other) {
     cols = other.cols;
     data = nullptr;
 
-    if (other.data != nullptr) {
+    if (other.data != nullptr && rows > 0 && cols > 0) {
       data = new double *[rows];
-      for (int i = 0; i < rows; ++i) {
-        data[i] = new double[cols];
-        for (int j = 0; j < cols; ++j) {
-          data[i][j] = other.data[i][j];
+      for (int currentRow = 0; currentRow < rows; ++currentRow) {
+        data[currentRow] = new double[cols];
+        for (int currentCol = 0; currentCol < cols; ++currentCol) {
+          data[currentRow][currentCol] = other.data[currentRow][currentCol];
         }
       }
     }
@@ -140,8 +158,8 @@ Matrix Matrix::operator=(const Matrix &other) {
 
 Matrix::~Matrix() {
   if (data != nullptr) {
-    for (int i = 0; i < rows; ++i) {
-      delete[] data[i];
+    for (int currentRow = 0; currentRow < rows; ++currentRow) {
+      delete[] data[currentRow];
     }
     delete[] data;
   }
