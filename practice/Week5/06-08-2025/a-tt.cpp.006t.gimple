@@ -1,0 +1,47 @@
+int main ()
+{
+  int D.49132;
+
+  {
+    struct A a;
+
+    try
+      {
+        a.a = 34;
+        a.b = 34;
+        _1 = a.b;
+        std::basic_ostream<char>::operator<< (&cout, _1);
+      }
+    finally
+      {
+        a = {CLOBBER};
+      }
+  }
+  D.49132 = 0;
+  return D.49132;
+}
+
+
+void __static_initialization_and_destruction_0 (int __initialize_p, int __priority)
+{
+  if (__initialize_p == 1) goto <D.49136>; else goto <D.49137>;
+  <D.49136>:
+  if (__priority == 65535) goto <D.49138>; else goto <D.49139>;
+  <D.49138>:
+  std::ios_base::Init::Init (&__ioinit);
+  __cxxabiv1::__cxa_atexit (__dt_comp , &__ioinit, &__dso_handle);
+  goto <D.49140>;
+  <D.49139>:
+  <D.49140>:
+  goto <D.49141>;
+  <D.49137>:
+  <D.49141>:
+}
+
+
+void _GLOBAL__sub_I_main ()
+{
+  __static_initialization_and_destruction_0 (1, 65535);
+}
+
+
