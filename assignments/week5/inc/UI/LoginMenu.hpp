@@ -1,10 +1,11 @@
 #ifndef LOGINMENU_HPP
 #define LOGINMENU_HPP
 
+#include <string>
+
+#include "MenuUtils.hpp"
 #include "../auth/AuthController.hpp"
 #include "../auth/LoginResult.hpp"
-#include "MenuUtils.hpp"
-#include <string>
 
 class LoginMenu {
     public:

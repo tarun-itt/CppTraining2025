@@ -1,11 +1,12 @@
 #ifndef ADMINMENU_HPP
 #define ADMINMENU_HPP
 
+#include <string>
+
+#include "MenuUtils.hpp"
 #include "../auth/AuthController.hpp"
 #include "../auth/LoginResult.hpp"
-#include "../entitites/UserDatabaseManager.hpp"
-#include "MenuUtils.hpp"
-#include <string>
+#include "../entities/UserDatabaseManager.hpp"
 
 class AdminMenu {
     public:
@@ -23,11 +24,10 @@ class AdminMenu {
         void showUserManagementMenu();
         void showAccountManagementMenu();
         void handleLogout();
-        void addNewAdmin();
-        void addNewAccountHolder();
-        void removeUser();
-        void createAccount();
-        void closeAccount();
+        void showAddNewUserMenu(MenuUtils::UserType userType);
+        void showRemoveUserMenu();
+        void showCreateAccountMenu();
+        void showCloseAccountMenu();
 };
 
 #endif 

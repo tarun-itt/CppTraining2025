@@ -1,9 +1,10 @@
-#include "../../inc/entitites/User.hpp"
-#include "../../inc/auth/LoginResult.hpp"
 #include <string>
 
-User::User(const std::string& email, const std::string& password) 
-    : email(email), password(password) {
+#include "../../inc/entities/User.hpp"
+#include "../../inc/auth/LoginResult.hpp"
+
+User::User(const std::string& email, const std::string& password, const uint32_t userId) 
+    : email(email), password(password), userId(userId) {
 }
 
 std::string User::getEmail() const {
@@ -22,10 +23,10 @@ double User::requestBalance(const LoginResult& loginResult, uint32_t accountNumb
     return loginResult.bank->processGetBalance(accountNumber, loginResult.sessionToken);
 }
 
-TransactionArray User::requestMiniStatement(const LoginResult& loginResult, uint32_t accountNumber) {
+TransactionLedger User::requestMiniStatement(const LoginResult& loginResult, uint32_t accountNumber) {
     return (loginResult.bank->processMiniStatement(accountNumber, loginResult.sessionToken));
 }
 
-TransactionArray User::requestRangeStatement(const LoginResult& loginResult, uint32_t accountNumber, std::string startDate, std::string endDate) {
+TransactionLedger User::requestRangeStatement(const LoginResult& loginResult, uint32_t accountNumber, std::string startDate, std::string endDate) {
     return (loginResult.bank->processRangeStatement(accountNumber, loginResult.sessionToken, startDate, endDate));
 }

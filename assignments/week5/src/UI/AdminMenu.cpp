@@ -1,7 +1,9 @@
-#include "../../inc/UI/AdminMenu.hpp"
-#include "../../inc/roles/Admin.hpp"
 #include <iostream>
 #include <limits>
+
+#include "../../inc/UI/AdminMenu.hpp"
+#include "../../inc/roles/Admin.hpp"
+#include "../../inc/roles/AccountHolder.hpp"
 
 AdminMenu::AdminMenu(AuthController& authController, LoginResult& loginResult, UserDatabaseManager& userManager)
     : authController(authController), loginResult(loginResult), userManager(userManager) {
@@ -15,22 +17,26 @@ void AdminMenu::run() {
     
     while (running) {
         showMainMenu();
-        int choice = MenuUtils::getChoice();
+        int choice = MenuUtils::promptForChoice();
         
         switch (static_cast<MenuUtils::AdminMenuChoice>(choice)) {
-            case MenuUtils::AdminMenuChoice::USER_MANAGEMENT:
+            case MenuUtils::AdminMenuChoice::USER_MANAGEMENT: {
                 showUserManagementMenu();
                 break;
-            case MenuUtils::AdminMenuChoice::ACCOUNT_MANAGEMENT:
+            }
+            case MenuUtils::AdminMenuChoice::ACCOUNT_MANAGEMENT: {
                 showAccountManagementMenu();
                 break;
-            case MenuUtils::AdminMenuChoice::LOGOUT:
+            }
+            case MenuUtils::AdminMenuChoice::LOGOUT: {
                 handleLogout();
                 running = false;
                 break;
-            default:
+            }
+            default: {
                 std::cout << "Invalid choice. Please try again.\n";
                 break;
+            }
         }
     }
 }
@@ -53,23 +59,28 @@ void AdminMenu::showUserManagementMenu() {
     std::cout << "4. Back to Main Menu" << std::endl;
     std::cout << std::endl;
     
-    int choice = MenuUtils::getChoice();
+    int choice = MenuUtils::promptForChoice();
     
     switch (static_cast<MenuUtils::UserManagementChoice>(choice)) {
-        case MenuUtils::UserManagementChoice::ADD_ADMIN:
-            addNewAdmin();
+        case MenuUtils::UserManagementChoice::ADD_ADMIN: {
+            showAddNewUserMenu(MenuUtils::UserType::ADMIN);
             break;
-        case MenuUtils::UserManagementChoice::ADD_ACCOUNT_HOLDER:
-            addNewAccountHolder();
+        }
+        case MenuUtils::UserManagementChoice::ADD_ACCOUNT_HOLDER: {
+            showAddNewUserMenu(MenuUtils::UserType::ACCOUNT_HOLDER);
             break;
-        case MenuUtils::UserManagementChoice::REMOVE_USER:
-            removeUser();
+        }
+        case MenuUtils::UserManagementChoice::REMOVE_USER: {
+            showRemoveUserMenu();
             break;
-        case MenuUtils::UserManagementChoice::BACK:
+        }
+        case MenuUtils::UserManagementChoice::BACK: {
             return;
-        default:
+        }
+        default: {
             std::cout << "Invalid choice. Please try again.\n";
             break;
+        }
     }
     
    
@@ -83,20 +94,24 @@ void AdminMenu::showAccountManagementMenu() {
     std::cout << "3. Back to Main Menu\n";
     std::cout << std::endl;
     
-    int choice = MenuUtils::getChoice();
+    int choice = MenuUtils::promptForChoice();
     
     switch (static_cast<MenuUtils::AccountManagementChoice>(choice)) {
-        case MenuUtils::AccountManagementChoice::CREATE_ACCOUNT:
-            createAccount();
+        case MenuUtils::AccountManagementChoice::CREATE_ACCOUNT: {
+            showCreateAccountMenu();
             break;
-        case MenuUtils::AccountManagementChoice::CLOSE_ACCOUNT:
-            closeAccount();
+        }
+        case MenuUtils::AccountManagementChoice::CLOSE_ACCOUNT: {
+            showCloseAccountMenu();
             break;
-        case MenuUtils::AccountManagementChoice::BACK:
+        }
+        case MenuUtils::AccountManagementChoice::BACK: {
             return;
-        default:
+        }
+        default: {
             std::cout << "Invalid choice. Please try again.\n";
             break;
+        }
     }
 }
 
@@ -105,35 +120,32 @@ void AdminMenu::handleLogout() {
     MenuUtils::showSuccess("Logged out successfully!\n");   
 }
 
-void AdminMenu::addNewAdmin() {
-    MenuUtils::showHeader("ADD NEW ADMIN");
-    std::string email = MenuUtils::getEmail();
-    std::string password = MenuUtils::getPassword();
+void AdminMenu::showAddNewUserMenu(MenuUtils::UserType userType) {
+    std::string userTypeName = (userType == MenuUtils::UserType::ADMIN) ? "ADMIN" : "ACCOUNT HOLDER";
+    MenuUtils::showHeader("ADD NEW " + userTypeName);
     
-    Admin* admin = dynamic_cast<Admin*>(loginResult.user);
-    if (admin && admin->requestAddAdmin(userManager, email, password)) {
-        MenuUtils::showSuccess("Admin added successfully!\n");
+    std::string email = MenuUtils::promptForEmail();
+    std::string password = MenuUtils::promptForPassword(true);
+    
+    if (!password.empty()) {
+        Admin* admin = dynamic_cast<Admin*>(loginResult.user);
+        if (admin) {
+           uint32_t userId = (userType == MenuUtils::UserType::ADMIN) ? 
+                admin->requestAddAdmin(userManager, email, password) :
+                admin->requestAddAccountHolder(userManager, email, password);
+            MenuUtils::showSuccess(userTypeName + " added successfully! User ID: " + std::to_string(userId) + "\n");
+        }else {
+            MenuUtils::showError("You are not authorized for this action. \n");
+        }
     } else {
-        MenuUtils::showError("Failed to add admin.\n");
+        MenuUtils::showError("Password setup failed.\n");
+        return;
     }
 }
 
-void AdminMenu::addNewAccountHolder() {
-    MenuUtils::showHeader("ADD NEW ACCOUNT HOLDER");
-    std::string email = MenuUtils::getEmail();
-    std::string password = MenuUtils::getPassword();
-    
-    Admin* admin = dynamic_cast<Admin*>(loginResult.user);
-    if (admin && admin->requestAddAccountHolder(userManager, email, password)) {
-        MenuUtils::showSuccess("Account holder added successfully!\n");
-    } else {
-        MenuUtils::showError("Failed to add account holder.\n");
-    }
-}
-
-void AdminMenu::removeUser() {
+void AdminMenu::showRemoveUserMenu() {
     MenuUtils::showHeader("REMOVE USER");
-    std::string email = MenuUtils::getEmail();
+    std::string email = MenuUtils::promptForEmail();
     
     Admin* admin = dynamic_cast<Admin*>(loginResult.user);
     if (admin && admin->requestRemoveUser(userManager, email)) {
@@ -143,36 +155,44 @@ void AdminMenu::removeUser() {
     }
 }
 
-void AdminMenu::createAccount() {
+void AdminMenu::showCreateAccountMenu() {
     MenuUtils::showHeader("CREATE NEW ACCOUNT");
-    std::cout << "User ID: ";
     uint32_t userId;
-    std::cin >> userId;
+    userId = MenuUtils::promptForUserId();
     
-    double initialDeposit = MenuUtils::getAmount();
+    double initialDeposit = MenuUtils::promptForAmount();
     
     Admin* admin = dynamic_cast<Admin*>(loginResult.user);
     if (admin) {
-        uint32_t accountNumber = admin->requestCreateAccount(loginResult, userId, initialDeposit);
-        if (accountNumber != 0) {
+        try {
+            uint32_t accountNumber = admin->requestCreateAccount(loginResult, userManager, userId, initialDeposit);
             MenuUtils::showSuccess("Account created successfully! Account Number: " + std::to_string(accountNumber));
-        } else {
-            MenuUtils::showError("Failed to create account.");
+        } catch (const std::runtime_error& e) {
+            MenuUtils::showError(e.what());
         }
+    }else {
+        MenuUtils::showError("You are not authorized to create an account.");
     }
 }
 
-void AdminMenu::closeAccount() {
+void AdminMenu::showCloseAccountMenu() {
     MenuUtils::showHeader("CLOSE ACCOUNT");
-    std::cout << "Account Number: ";
-    std::string accountNumber;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::getline(std::cin, accountNumber);
-    
+    uint32_t accountNumber;
+    uint32_t userId = MenuUtils::promptForUserId();
+    accountNumber = dynamic_cast<AccountHolder*>(userManager.findUser(userId))->getAccountNumber();
+
     Admin* admin = dynamic_cast<Admin*>(loginResult.user);
-    if (admin && admin->requestCloseAccount(loginResult, accountNumber)) {
-        MenuUtils::showSuccess("Account closed successfully!");
-    } else {
-        MenuUtils::showError("Failed to close account.");
+    if (admin) {
+        try {
+            if (admin->requestCloseAccount(loginResult, accountNumber)) {
+                MenuUtils::showSuccess("Account closed successfully!");
+            } else {
+                MenuUtils::showError("Failed to close account.");
+            }
+        } catch (const std::runtime_error& e) {
+            MenuUtils::showError(e.what());
+        }
+    }else {
+        MenuUtils::showError("You are not authorized to close an account.");
     }
 } 

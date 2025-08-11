@@ -1,10 +1,9 @@
+#include <cstdint>
+
 #include "../../inc/roles/AccountHolder.hpp"
 #include "../../inc/auth/LoginResult.hpp"
 
-#include <cstdint>
-
-AccountHolder::AccountHolder(const std::string& email, const std::string& password): User(email, password) {
-}
+AccountHolder::AccountHolder(const std::string& email, const std::string& password, uint32_t userId): User(email, password, userId), accountNumber(0) {}
 
 uint32_t AccountHolder::getAccountNumber() const {
     return accountNumber;

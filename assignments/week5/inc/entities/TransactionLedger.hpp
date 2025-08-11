@@ -1,9 +1,9 @@
-#ifndef TRANSACTIONARRAY_HPP
-#define TRANSACTIONARRAY_HPP
+#ifndef TransactionLedger_HPP
+#define TransactionLedger_HPP
 
 #include "Transaction.hpp"
 
-class TransactionArray {
+class TransactionLedger {
     private:
         Transaction** data;
         uint32_t size;
@@ -12,13 +12,13 @@ class TransactionArray {
         void resize(int newCapacity);
 
     public:
-        explicit TransactionArray(int capacity = 10);
-        ~TransactionArray();
+        explicit TransactionLedger(int capacity = 10);
+        ~TransactionLedger();
 
         void add(Transaction* t);
         Transaction* operator[](int index) const;
         int getSize() const;
-        TransactionArray getSubArray(const TransactionArray& source, int startIndex, int count);
+        TransactionLedger getSubArray(const TransactionLedger& source, int startIndex, int count);
 };
 
 #endif

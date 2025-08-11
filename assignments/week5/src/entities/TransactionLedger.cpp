@@ -1,16 +1,16 @@
-#include "../../inc/entitites/TransactionArray.hpp"
+#include "../../inc/entities/TransactionLedger.hpp"
 
-TransactionArray::TransactionArray(int capacity)
+TransactionLedger::TransactionLedger(int capacity)
     : size(0), capacity(capacity), data(new Transaction*[capacity]) {}
 
-TransactionArray::~TransactionArray() {
+TransactionLedger::~TransactionLedger() {
     for (int transactionIndex = 0; transactionIndex < size; transactionIndex++) {
         delete data[transactionIndex];
     }
     delete[] data;
 }
 
-void TransactionArray::resize(int newCapacity) {
+void TransactionLedger::resize(int newCapacity) {
     Transaction** newData = new Transaction*[newCapacity];
 
     for (int transactionIndex = 0; transactionIndex < size; transactionIndex++) {
@@ -22,7 +22,7 @@ void TransactionArray::resize(int newCapacity) {
     capacity = newCapacity;
 }
 
-void TransactionArray::add(Transaction* t) {
+void TransactionLedger::add(Transaction* t) {
     if (size == capacity) {
         resize(capacity * 2);
     }
@@ -30,16 +30,16 @@ void TransactionArray::add(Transaction* t) {
     data[size++] = t;
 }
 
-Transaction* TransactionArray::operator[](int index) const {
+Transaction* TransactionLedger::operator[](int index) const {
     return data[index];
 }
 
-int TransactionArray::getSize() const {
+int TransactionLedger::getSize() const {
     return size;
 }
 
-TransactionArray TransactionArray::getSubArray(const TransactionArray& source, int startIndex, int count) {
-    TransactionArray result(count > 10 ? count : 10);
+TransactionLedger TransactionLedger::getSubArray(const TransactionLedger& source, int startIndex, int count) {
+    TransactionLedger result(count > 10 ? count : 10);
 
     for (int transactionIndex = 0; transactionIndex < count; transactionIndex++) {
         result.add(new Transaction(*source[startIndex + transactionIndex]));

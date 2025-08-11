@@ -1,8 +1,10 @@
 #ifndef USER_HPP
 #define USER_HPP
 
+#include <cstdint>
 #include <string>
-#include "TransactionArray.hpp"
+
+#include "TransactionLedger.hpp"
 
 struct LoginResult;
 
@@ -13,13 +15,11 @@ class User {
 
         virtual uint32_t getUserId() const; 
         virtual double requestBalance(const LoginResult& loginResult, uint32_t accountNumber);
-        virtual TransactionArray requestMiniStatement(const LoginResult& loginResult, uint32_t accountNumber);
-        virtual TransactionArray requestRangeStatement(const LoginResult& loginResult, uint32_t accountNumber, std::string startDate, std::string endDate);
-
-        friend class UserDatabaseManager;
+        virtual TransactionLedger requestMiniStatement(const LoginResult& loginResult, uint32_t accountNumber);
+        virtual TransactionLedger requestRangeStatement(const LoginResult& loginResult, uint32_t accountNumber, std::string startDate, std::string endDate);
         
     protected:
-        User(const std::string& email, const std::string& password);
+        User(const std::string& email, const std::string& password, const uint32_t userId);
 
         std::string email;
         std::string password;

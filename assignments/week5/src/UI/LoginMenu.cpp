@@ -1,6 +1,7 @@
-#include "../../inc/UI/LoginMenu.hpp"
 #include <iostream>
 #include <limits>
+
+#include "../../inc/UI/LoginMenu.hpp"
 
 LoginMenu::LoginMenu(AuthController& authController): authController(authController) {}
 
@@ -19,7 +20,7 @@ LoginResult LoginMenu::run() {
 
     while (running) {
         showMainMenu();
-        int choice = MenuUtils::getChoice();
+        int choice = MenuUtils::promptForChoice();
 
         switch (static_cast<MenuUtils::MainMenuChoice>(choice)) {
             case MenuUtils::MainMenuChoice::LOGIN:{
@@ -45,8 +46,8 @@ LoginResult LoginMenu::run() {
 }
 
 LoginResult LoginMenu::performLogin() {
-    std::string email = MenuUtils::getEmail();
-    std::string password = MenuUtils::getPassword();
+    std::string email = MenuUtils::promptForEmail();
+    std::string password = MenuUtils::promptForPassword();
     
     LoginResult result = authController.login(email, password);
     

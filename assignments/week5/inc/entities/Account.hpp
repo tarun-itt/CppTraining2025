@@ -5,7 +5,7 @@
 #include <string>
 
 #include "Transaction.hpp"
-#include "TransactionArray.hpp"
+#include "TransactionLedger.hpp"
 
 class Account {
     public:
@@ -14,14 +14,14 @@ class Account {
         double getBalance() const;
         uint32_t getAccountHolderId() const;
         uint32_t getAccountNumber() const;
-        TransactionArray getMiniStatement();
-        TransactionArray getRangeStatement(std::string startDate, std::string endDate);
+        TransactionLedger getMiniStatement();
+        TransactionLedger getRangeStatement(std::string startDate, std::string endDate);
 
     private:
         uint32_t accountNumber;
         uint32_t accountHolderId;
         double balance;
-        TransactionArray transactions;
+        TransactionLedger transactions;
 };
 
 #endif

@@ -1,10 +1,11 @@
 #ifndef ACCOUNTMENU_HPP
 #define ACCOUNTMENU_HPP
 
+#include <string>
+
+#include "MenuUtils.hpp"
 #include "../auth/AuthController.hpp"
 #include "../auth/LoginResult.hpp"
-#include "MenuUtils.hpp"
-#include <string>
 
 class AccountMenu {
     public:
@@ -19,10 +20,11 @@ class AccountMenu {
         
         void showMainMenu();
         void showTransactionMenu();
+        void showMiniStatement();
+        void showFullStatement();
         void showAccountInfo();
         void handleLogout();
-        void performDeposit();
-        void performWithdraw();
+        void performTransaction(TransactionType type);
 };
 
 #endif 

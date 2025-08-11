@@ -1,10 +1,11 @@
-#ifndef USERARRAY_HPP
-#define USERARRAY_HPP
+#ifndef UserRegistry_HPP
+#define UserRegistry_HPP
 
-#include "../../inc/entitites/User.hpp"
 #include <cstdint>
 
-class UserArray {
+#include "../../inc/entities/User.hpp"
+
+class UserRegistry {
 private:
     User** data;
     uint32_t size;
@@ -13,8 +14,8 @@ private:
     void resize(int newCapacity);
 
 public:
-    explicit UserArray(int capacity = 10);
-    ~UserArray();
+    explicit UserRegistry(int capacity = 10);
+    ~UserRegistry();
 
     void add(User* a);
     User* operator[](int index) const;

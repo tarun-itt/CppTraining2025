@@ -1,7 +1,8 @@
-#include "../../inc/UI/AccountMenu.hpp"
-#include "../../inc/roles/AccountHolder.hpp"
 #include <iostream>
 #include <limits>
+
+#include "../../inc/UI/AccountMenu.hpp"
+#include "../../inc/roles/AccountHolder.hpp"
 
 AccountMenu::AccountMenu(AuthController& authController, LoginResult& loginResult)
     : authController(authController), loginResult(loginResult) {
@@ -15,29 +16,32 @@ void AccountMenu::run() {
     
     while (running) {
         showMainMenu();
-        int choice = MenuUtils::getChoice();
+        int choice = MenuUtils::promptForChoice();
         
         switch (static_cast<MenuUtils::AccountMenuChoice>(choice)) {
-            case MenuUtils::AccountMenuChoice::TRANSACTIONS:
+            case MenuUtils::AccountMenuChoice::TRANSACTIONS: {
                 showTransactionMenu();
                 break;
-            case MenuUtils::AccountMenuChoice::ACCOUNT_INFO:
+            }
+            case MenuUtils::AccountMenuChoice::ACCOUNT_INFO: {
                 showAccountInfo();
                 break;
-            case MenuUtils::AccountMenuChoice::LOGOUT:
+            }
+            case MenuUtils::AccountMenuChoice::LOGOUT: {
                 handleLogout();
                 running = false;
                 break;
-            default:
+            }
+            default: {
                 std::cout << "Invalid choice. Please try again." << std::endl;
                 break;
+            }
         }
     }
 }
 
 void AccountMenu::showMainMenu() {
-    MenuUtils::showHeader("ACCOUNT HOLDER DASHBOARD");
-    std::cout << "Welcome, Account Holder!" << std::endl;
+    MenuUtils::showHeader("ACCOUNT MENU");
     std::cout << std::endl;
     std::cout << "Please select an option:" << std::endl;
     std::cout << "1. Transactions" << std::endl;
@@ -47,33 +51,59 @@ void AccountMenu::showMainMenu() {
 }
 
 void AccountMenu::showTransactionMenu() {
-    MenuUtils::showHeader("TRANSACTIONS");
-    std::cout << "Transaction Options:" << std::endl;
-    std::cout << "1. Deposit" << std::endl;
-    std::cout << "2. Withdraw" << std::endl;
-    std::cout << "3. Back to Main Menu" << std::endl;
-    std::cout << std::endl;
+    AccountHolder* accountHolder = dynamic_cast<AccountHolder*>(loginResult.user);
     
-    int choice = MenuUtils::getChoice();
-    
-    switch (static_cast<MenuUtils::TransactionChoice>(choice)) {
-        case MenuUtils::TransactionChoice::DEPOSIT:
-            performDeposit();
-            break;
-        case MenuUtils::TransactionChoice::WITHDRAW:
-            performWithdraw();
-            break;
-        case MenuUtils::TransactionChoice::BACK:
-            return;
-        default:
-            std::cout << "Invalid choice. Please try again." << std::endl;
-            break;
+    if(accountHolder->getAccountNumber()) {
+        MenuUtils::showHeader("TRANSACTIONS");
+        std::cout << "Transaction Options:" << std::endl;
+        std::cout << "1. Deposit" << std::endl;
+        std::cout << "2. Withdraw" << std::endl;
+        std::cout << "3. Back to Main Menu" << std::endl;
+        std::cout << std::endl;
+        
+        int choice = MenuUtils::promptForChoice();
+        
+        switch (static_cast<MenuUtils::TransactionChoice>(choice)) {
+            case MenuUtils::TransactionChoice::DEPOSIT: {
+                performTransaction(TransactionType::DEPOSIT);
+                break;
+            }
+            case MenuUtils::TransactionChoice::WITHDRAW: {
+                performTransaction(TransactionType::WITHDRAW);
+                break;
+            }
+            case MenuUtils::TransactionChoice::MINI_STATEMENT: {
+                showMiniStatement();
+                break;
+            }
+            case MenuUtils::TransactionChoice::RANGE_STATEMENT: {
+                //showRangeStatement();
+                break;
+            }
+            case MenuUtils::TransactionChoice::BACK:{
+                return;
+            }
+            default: {
+                std::cout << "Invalid choice. Please try again." << std::endl;
+                break;
+            }
+        }
+    }else {
+        MenuUtils::showError("You don't have an account yet!");
     }
 }
 
 void AccountMenu::showAccountInfo() {
     MenuUtils::showHeader("ACCOUNT INFORMATION");
-    //std::cout << "Account Number: " << loginResult.user->getAccountNumber() << std::endl;
+    AccountHolder* accountHolder = dynamic_cast<AccountHolder*>(loginResult.user);
+    if(accountHolder->getAccountNumber()) {
+        std::cout<< "User ID: " << accountHolder->getUserId() << std::endl;
+        std::cout << "Account Number: " << accountHolder->getAccountNumber() << std::endl;
+        std::cout<< "Email: " << accountHolder->getEmail() << std::endl;
+        std::cout<< "Balance: " << loginResult.bank->processGetBalance(accountHolder->getAccountNumber(), loginResult.sessionToken) << std::endl;
+    }else {
+        MenuUtils::showError("You don't have an account yet!");
+    }
 }
 
 void AccountMenu::handleLogout() {
@@ -81,34 +111,61 @@ void AccountMenu::handleLogout() {
     MenuUtils::showSuccess("Logged out successfully!");
 }
 
-void AccountMenu::performDeposit() {
-    MenuUtils::showHeader("DEPOSIT");
-    double amount = MenuUtils::getAmount();
-    
-    if (amount > 0) {
-        AccountHolder* accountHolder = (AccountHolder*)(loginResult.user);
-        if (accountHolder && accountHolder->requestDeposit(loginResult, amount)) {
-            MenuUtils::showSuccess("Deposit successful! Amount: " + std::to_string(amount));
-        } else {
-            MenuUtils::showError("Deposit failed.");
-        }
-    } else {
-        MenuUtils::showError("Invalid amount. Please enter a positive value.");
+void AccountMenu::showMiniStatement() {
+    AccountHolder *accountHolder = dynamic_cast<AccountHolder*>(loginResult.user);
+    TransactionLedger miniTransactions = loginResult.bank->processMiniStatement(accountHolder->getAccountNumber(), loginResult.sessionToken);
+
+    for(int transaction = 0; transaction < miniTransactions.getSize();transaction++){
+        std::cout << "Transaction " << transaction + 1 << ":" << std::endl;
+        std::cout << "Type: " << (miniTransactions[transaction]->getType() == TransactionType::DEPOSIT ? "Deposit" : "Withdrawal") << std::endl;
+        std::cout << "Amount: " << miniTransactions[transaction]->getAmount() << std::endl;
+        std::cout << "Balance After Transaction: " << miniTransactions[transaction]->getBalanceAfterTransaction() << std::endl;
+        std::cout << "Date: " << miniTransactions[transaction]->getTimestamp() << std::endl;
+        std::cout << "--------------------------------" << std::endl;
     }
 }
 
-void AccountMenu::performWithdraw() {
-    MenuUtils::showHeader("WITHDRAW");
-    double amount = MenuUtils::getAmount();
-    
-    if (amount > 0) {
-        AccountHolder* accountHolder = dynamic_cast<AccountHolder*>(loginResult.user);
-        if (accountHolder && accountHolder->requestWithdraw(loginResult, amount)) {
-            MenuUtils::showSuccess("Withdrawal successful! Amount: " + std::to_string(amount));
-        } else {
-            MenuUtils::showError("Withdrawal failed. Insufficient funds or invalid amount.");
-        }
-    } else {
-        MenuUtils::showError("Invalid amount. Please enter a positive value.");
+void AccountMenu::showFullStatement() {
+    AccountHolder *accountHolder = dynamic_cast<AccountHolder*>(loginResult.user);  
+    TransactionLedger fullTransactions = loginResult.bank->processRangeStatement(accountHolder->getAccountNumber(), loginResult.sessionToken, "2025-01-01", "2025-10-31");
+
+    for(int transaction = 0; transaction < fullTransactions.getSize();transaction++){
+        std::cout << "Transaction " << transaction + 1 << ":" << std::endl;
+        std::cout << "Type: " << (fullTransactions[transaction]->getType() == TransactionType::DEPOSIT ? "Deposit" : "Withdrawal") << std::endl;
     }
-} 
+}
+
+void AccountMenu::performTransaction(TransactionType type) {
+    std::string transactionTypeName = type == TransactionType::WITHDRAW ? "WITHDRAW" : "DEPOSIT";
+    MenuUtils::showHeader(transactionTypeName);
+    
+    double amount = MenuUtils::promptForAmount();
+    try{
+        if (amount > 0) {
+            AccountHolder* accountHolder = dynamic_cast<AccountHolder*>(loginResult.user);
+            if (accountHolder) {
+                bool transactionSuccess = false;
+
+                if(type == TransactionType::DEPOSIT){
+                    transactionSuccess = accountHolder->requestDeposit(loginResult, amount);
+                }else{
+                    transactionSuccess = accountHolder->requestWithdraw(loginResult, amount);
+                }
+
+                if (transactionSuccess) {
+                    std::string successMsg = (type == TransactionType::DEPOSIT) ? "Deposit successful! Amount: " + std::to_string(amount) : "Withdrawal successful! Amount: " + std::to_string(amount); 
+                    MenuUtils::showSuccess(successMsg);
+                } else {
+                    std::string errorMsg = (type == TransactionType::DEPOSIT) ? "Deposit failed." : "Withdrawal failed. Insufficient funds.";
+                    MenuUtils::showError(errorMsg);
+                }
+            } else {
+                MenuUtils::showError("Account Holder doesn not exist!");
+            }
+        } else {
+            MenuUtils::showError("Invalid amount. Please enter a positive value.");
+        }
+    } catch (const std::runtime_error& e) {
+        MenuUtils::showError(e.what());
+    }
+}

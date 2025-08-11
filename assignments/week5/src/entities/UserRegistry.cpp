@@ -1,16 +1,16 @@
-#include "../../inc/entitites/UserArray.hpp"
+#include "../../inc/entities/UserRegistry.hpp"
 
-UserArray::UserArray(int capacity)
+UserRegistry::UserRegistry(int capacity)
     : size(0), capacity(capacity), data(new User*[capacity]) {}
 
-UserArray::~UserArray() {
+UserRegistry::~UserRegistry() {
     for (int userIndex = 0; userIndex < size; userIndex++) {
         delete data[userIndex];
     }
     delete[] data;
 }
 
-void UserArray::resize(int newCapacity) {
+void UserRegistry::resize(int newCapacity) {
     User** newData = new User*[newCapacity];
     for (int userIndex = 0; userIndex < size; userIndex++) {
         newData[userIndex] = data[userIndex];
@@ -20,22 +20,22 @@ void UserArray::resize(int newCapacity) {
     capacity = newCapacity;
 }
 
-void UserArray::add(User* a) {
+void UserRegistry::add(User* a) {
     if (size == capacity) {
         resize(capacity * 2);
     }
     data[size++] = a;
 }
 
-User* UserArray::operator[](int index) const {
+User* UserRegistry::operator[](int index) const {
     return data[index];
 }
 
-int UserArray::getSize() const {
+int UserRegistry::getSize() const {
     return size;
 }
 
-bool UserArray::remove(const std::string& email) {
+bool UserRegistry::remove(const std::string& email) {
     for (int userIndex = 0; userIndex < size; userIndex++) {
         if (data[userIndex]->getEmail() == email) {
             delete data[userIndex];

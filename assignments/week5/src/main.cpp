@@ -1,6 +1,7 @@
 #include <ctime>
 #include <cstdlib>
-#include "../inc/entitites/UserDatabaseManager.hpp"
+
+#include "../inc/entities/UserDatabaseManager.hpp"
 #include "../inc/auth/AuthController.hpp"
 #include "../inc/UI/LoginMenu.hpp"
 #include "../inc/UI/AdminMenu.hpp"

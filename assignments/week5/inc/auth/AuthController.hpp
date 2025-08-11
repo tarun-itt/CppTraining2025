@@ -1,11 +1,11 @@
 #ifndef AUTHCONTROLLER_HPP
 #define AUTHCONTROLLER_HPP
 
-#include "LoginResult.hpp"
-#include "../entitites/User.hpp"
-#include "../entitites/UserDatabaseManager.hpp"
-
 #include <string>
+
+#include "LoginResult.hpp"
+#include "../entities/User.hpp"
+#include "../entities/UserDatabaseManager.hpp"
 
 class AuthController {
     public:

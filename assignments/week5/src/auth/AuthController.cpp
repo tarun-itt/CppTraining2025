@@ -1,7 +1,8 @@
+#include <string>
+
 #include "../../inc/auth/AuthController.hpp"
 #include "../../inc/roles/Admin.hpp"
 #include "../../inc/roles/AccountHolder.hpp"
-#include <string>
 
 AuthController::AuthController(UserDatabaseManager& userManager): currentUser(nullptr), userManager(userManager) {
 }

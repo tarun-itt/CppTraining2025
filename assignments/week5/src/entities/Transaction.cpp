@@ -1,6 +1,7 @@
-#include "../../inc/entitites/Transaction.hpp"
 #include <ctime>
 #include <cstring>
+
+#include "../../inc/entities/Transaction.hpp"
 
 Transaction::Transaction(TransactionType type, double amount, double balanceAfterTransaction) 
     : type(type), timestamp(generateTimestamp()), amount(amount), balanceAfterTransaction(balanceAfterTransaction) {

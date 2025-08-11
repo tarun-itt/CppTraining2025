@@ -1,16 +1,16 @@
-#include "../../inc/entitites/AccountArray.hpp"
+#include "../../inc/entities/AccountRegistry.hpp"
 
-AccountArray::AccountArray(int capacity)
+AccountRegistry::AccountRegistry(int capacity)
     : size(0), capacity(capacity), data(new Account*[capacity]) {}
 
-AccountArray::~AccountArray() {
+AccountRegistry::~AccountRegistry() {
     for (int accountIndex = 0; accountIndex < size; accountIndex++) {
         delete data[accountIndex];
     }
     delete[] data;
 }
 
-void AccountArray::resize(int newCapacity) {
+void AccountRegistry::resize(int newCapacity) {
     Account** newData = new Account*[newCapacity];
     for (int accountIndex = 0; accountIndex < size; accountIndex++) {
         newData[accountIndex] = data[accountIndex];
@@ -20,22 +20,22 @@ void AccountArray::resize(int newCapacity) {
     capacity = newCapacity;
 }
 
-void AccountArray::add(Account* a) {
+void AccountRegistry::add(Account* a) {
     if (size == capacity) {
         resize(capacity * 2);
     }
     data[size++] = a;
 }
 
-Account* AccountArray::operator[](int index) const {
+Account* AccountRegistry::operator[](int index) const {
     return data[index];
 }
 
-int AccountArray::getSize() const {
+int AccountRegistry::getSize() const {
     return size;
 }
 
-bool AccountArray::remove(int accountId) {
+bool AccountRegistry::remove(int accountId) {
     for (int accountIndex = 0; accountIndex < size; accountIndex++) {
         if (data[accountIndex]->getAccountNumber() == accountId) {
             delete data[accountIndex];

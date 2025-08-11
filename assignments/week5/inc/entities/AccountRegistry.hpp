@@ -1,10 +1,11 @@
-#ifndef ACCOUNTARRAY_HPP
-#define ACCOUNTARRAY_HPP
+#ifndef AccountRegistry_HPP
+#define AccountRegistry_HPP
 
-#include "../../inc/entitites/Account.hpp"
 #include <cstdint>
 
-class AccountArray {
+#include "../../inc/entities/Account.hpp"
+
+class AccountRegistry {
 private:
     Account** data;
     uint32_t size;
@@ -13,8 +14,8 @@ private:
     void resize(int newCapacity);
 
 public:
-    explicit AccountArray(int capacity = 10);
-    ~AccountArray();
+    explicit AccountRegistry(int capacity = 10);
+    ~AccountRegistry();
 
     void add(Account* a);
     Account* operator[](int index) const;

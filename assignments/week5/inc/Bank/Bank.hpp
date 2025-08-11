@@ -2,8 +2,9 @@
 #define BANK_HPP
 
 #include <string>
-#include "../entitites/Account.hpp"
-#include "../entitites/AccountArray.hpp"
+
+#include "../entities/Account.hpp"
+#include "../entities/AccountRegistry.hpp"
 
 class Bank {
 public:
@@ -14,9 +15,9 @@ public:
     bool processCloseAccount(uint32_t accountNumber, std::string token);
     uint32_t processCreateAccount(uint32_t accountHolderId, double initialDeposit, std::string token);
     double processGetBalance(uint32_t accountNumber, std::string token);
-    TransactionArray processMiniStatement(uint32_t accountNumber, std::string token);
-    TransactionArray processRangeStatement(uint32_t accountNumber, std::string token, std::string startDate, std::string endDate);
-
+    TransactionLedger processMiniStatement(uint32_t accountNumber, std::string token);
+    TransactionLedger processRangeStatement(uint32_t accountNumber, std::string token, std::string startDate, std::string endDate);
+    
     friend class AuthController;
 
 private:
@@ -26,7 +27,7 @@ private:
     Bank& operator=(const Bank&) = delete;
     
     static Bank* instance;
-    AccountArray accounts;
+    AccountRegistry accounts;
     std::string activeSessionToken;
     
     std::string generateSessionToken();

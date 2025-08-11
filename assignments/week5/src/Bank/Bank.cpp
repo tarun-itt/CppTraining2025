@@ -1,9 +1,10 @@
-#include "../../inc/Bank/Bank.hpp"
 #include <stdexcept>
+
+#include "../../inc/Bank/Bank.hpp"
 
 Bank* Bank::instance = nullptr;
 
-Bank::Bank() : activeSessionToken(""), accounts(AccountArray(100)) {
+Bank::Bank() : activeSessionToken(""), accounts(AccountRegistry(100)) {
 }
 
 Bank::~Bank() {
@@ -23,7 +24,7 @@ std::string Bank::generateSessionToken() {
 }
 
 std::string Bank::getSessionToken() {
-    if(activeSessionToken == "") {
+    if(activeSessionToken.empty()) {
         activeSessionToken = generateSessionToken();
     }
     return activeSessionToken;
@@ -45,16 +46,9 @@ Account* Bank::findAccount(uint32_t accountNumber) {
 }
 
 uint32_t Bank::generateAccountNumber() {
-    static uint32_t accountNumber = 100;
-    
-    if (accountNumber == 100) {
-        for (int accountIndex = 0; accountIndex < accounts.getSize(); accountIndex++) {
-            if (accounts[accountIndex]->getAccountNumber() > accountNumber) {
-                accountNumber = accounts[accountIndex]->getAccountNumber();
-            }
-        }
-    }
-    return accountNumber + 10;
+    static uint32_t lastAccountNumber = 100;
+    lastAccountNumber += rand() % 100 + 1;
+    return lastAccountNumber;
 }
 
 bool Bank::processDeposit(uint32_t accountNumber, double amount, std::string token) {
@@ -129,7 +123,7 @@ double Bank::processGetBalance(uint32_t accountNumber, std::string token) {
     return account->getBalance();
 }
 
-TransactionArray Bank::processMiniStatement(uint32_t accountNumber, std::string token) {
+TransactionLedger Bank::processMiniStatement(uint32_t accountNumber, std::string token) {
     if (!validateSessionToken(token)) {
         throw std::runtime_error("Invalid session token");
     }
@@ -142,7 +136,7 @@ TransactionArray Bank::processMiniStatement(uint32_t accountNumber, std::string 
     return account->getMiniStatement(); 
 }
 
-TransactionArray Bank::processRangeStatement(uint32_t accountNumber, std::string token, std::string startDate, std::string endDate) {
+TransactionLedger Bank::processRangeStatement(uint32_t accountNumber, std::string token, std::string startDate, std::string endDate) {
     if (!validateSessionToken(token)) {
         throw std::runtime_error("Invalid session token");
     }

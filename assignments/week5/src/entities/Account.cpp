@@ -1,6 +1,6 @@
-#include "../../inc/entitites/Account.hpp"
+#include "../../inc/entities/Account.hpp"
 
-Account::Account(uint32_t accountNumber, uint32_t accountHolderId, double depositAmount): accountNumber(accountNumber), accountHolderId(accountHolderId), transactions(TransactionArray()) {
+Account::Account(uint32_t accountNumber, uint32_t accountHolderId, double depositAmount): accountNumber(accountNumber), accountHolderId(accountHolderId), transactions(TransactionLedger()) {
     addTransaction(TransactionType::DEPOSIT, depositAmount);
 }
 
@@ -28,12 +28,12 @@ uint32_t Account::getAccountNumber() const {
     return accountNumber;
 }
 
-TransactionArray Account::getMiniStatement() {
+TransactionLedger Account::getMiniStatement() {
     int startIndex = transactions.getSize() < 10 ? 0 : transactions.getSize()-10; 
     return transactions.getSubArray(transactions,startIndex, 10);
 }
 
-TransactionArray Account::getRangeStatement(std::string startDate, std::string endDate) {
+TransactionLedger Account::getRangeStatement(std::string startDate, std::string endDate) {
     int startIndex = -1;
     int endIndex = -1;
     
@@ -51,5 +51,5 @@ TransactionArray Account::getRangeStatement(std::string startDate, std::string e
     
     int count = endIndex - startIndex + 1;
     
-    return !(startIndex != -1 && endIndex != -1) ? transactions.getSubArray(transactions, startIndex, count): TransactionArray(0);
+    return !(startIndex != -1 && endIndex != -1) ? transactions.getSubArray(transactions, startIndex, count): TransactionLedger(0);
 }
