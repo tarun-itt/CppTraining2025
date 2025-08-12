@@ -13,11 +13,21 @@ uint32_t Admin::requestAddAdmin(UserDatabaseManager& userManager, const std::str
     return userManager.addAdmin(email, password);
 }
 
-uint32_t Admin::requestAddAccountHolder(UserDatabaseManager& userManager, const std::string& email, const std::string& password) {
-    return userManager.addAccountHolder(email, password);
+uint32_t Admin::requestAddAccountHolder(LoginResult& loginResult, UserDatabaseManager& userManager, const std::string& email, const std::string& password, double initialDeposit) {
+    uint32_t userId = userManager.addAccountHolder(email, password);
+    this->requestCreateAccount(loginResult, userManager, userId, initialDeposit);
+    return userId;
 }
 
-bool Admin::requestRemoveUser(UserDatabaseManager& userManager, const std::string& email) {
+bool Admin::requestRemoveUser(LoginResult& loginResult, UserDatabaseManager& userManager, const std::string& email) {
+    User* user = userManager.findUser(email);
+    if(user == nullptr) {
+        throw std::runtime_error("User not found");
+    }
+    AccountHolder* accountUser = dynamic_cast<AccountHolder*>(user);
+    if(accountUser != nullptr) {
+        this->requestCloseAccount(loginResult, accountUser->getAccountNumber());
+    }
     return userManager.removeUser(email);
 }
 
@@ -29,7 +39,7 @@ uint32_t Admin::requestCreateAccount(const LoginResult& loginResult, UserDatabas
     }else {
         throw std::runtime_error("User not found");
     }
- 
+
 }
 
 bool Admin::requestCloseAccount(const LoginResult& loginResult, uint32_t accountNumber) {

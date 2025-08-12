@@ -56,7 +56,7 @@ bool Bank::processDeposit(uint32_t accountNumber, double amount, std::string tok
         throw std::runtime_error("Invalid session token");
     }
     if (amount <= 0) {
-        throw std::runtime_error("Invalid amount");
+        throw std::invalid_argument("Invalid amount");
     }
     
     Account* account = findAccount(accountNumber);
@@ -72,7 +72,7 @@ bool Bank::processWithdrawal(uint32_t accountNumber, double amount, std::string 
         throw std::runtime_error("Invalid session token");
     }
     if (amount <= 0) {
-        throw std::runtime_error("Invalid amount");
+        throw std::invalid_argument("Invalid amount");
     }
     
     Account* account = findAccount(accountNumber);
@@ -92,7 +92,7 @@ uint32_t Bank::processCreateAccount(uint32_t accountHolderId, double initialDepo
         throw std::runtime_error("Invalid session token");
     }
     if (initialDeposit < 0) {
-        throw std::runtime_error("Invalid initial deposit");
+        throw std::invalid_argument("Invalid initial deposit");
     }
     
     uint32_t accountNumber = generateAccountNumber();
@@ -136,7 +136,7 @@ TransactionLedger Bank::processMiniStatement(uint32_t accountNumber, std::string
     return account->getMiniStatement(); 
 }
 
-TransactionLedger Bank::processRangeStatement(uint32_t accountNumber, std::string token, std::string startDate, std::string endDate) {
+TransactionLedger Bank::processStatementInDateRange(uint32_t accountNumber, std::string token, std::string startDate, std::string endDate) {
     if (!validateSessionToken(token)) {
         throw std::runtime_error("Invalid session token");
     }
@@ -146,5 +146,5 @@ TransactionLedger Bank::processRangeStatement(uint32_t accountNumber, std::strin
         throw std::runtime_error("Account not found");
     }
     
-    return account->getRangeStatement(startDate, endDate);
+    return account->getStatementInDateRange(startDate, endDate);
 }

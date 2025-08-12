@@ -15,7 +15,7 @@ class Account {
         uint32_t getAccountHolderId() const;
         uint32_t getAccountNumber() const;
         TransactionLedger getMiniStatement();
-        TransactionLedger getRangeStatement(std::string startDate, std::string endDate);
+        TransactionLedger getStatementInDateRange(std::string startDate, std::string endDate);
 
     private:
         uint32_t accountNumber;

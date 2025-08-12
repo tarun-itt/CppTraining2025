@@ -29,7 +29,6 @@ uint32_t UserDatabaseManager::addAccountHolder(const std::string& email, const s
     uint32_t userId = generateUserId();
 
     if(findUser(email) == nullptr) {
-        uint32_t userId = generateUserId();
         AccountHolder* accountHolder = new AccountHolder(email, password, userId);
         accountHolders.add(accountHolder);    
     }

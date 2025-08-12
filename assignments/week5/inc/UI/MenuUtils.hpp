@@ -12,8 +12,9 @@ namespace MenuUtils {
     };
     
     enum class AdminMenuChoice {
-        USER_MANAGEMENT = 1,
-        ACCOUNT_MANAGEMENT,
+        ADD_ADMIN = 1,
+        ADD_ACCOUNT_HOLDER,
+        REMOVE_USER,
         LOGOUT
     };
     
@@ -21,19 +22,6 @@ namespace MenuUtils {
         TRANSACTIONS = 1,
         ACCOUNT_INFO,
         LOGOUT
-    };
-    
-    enum class UserManagementChoice {
-        ADD_ADMIN = 1,
-        ADD_ACCOUNT_HOLDER,
-        REMOVE_USER,
-        BACK
-    };
-    
-    enum class AccountManagementChoice {
-        CREATE_ACCOUNT = 1,
-        CLOSE_ACCOUNT,
-        BACK
     };
     
     enum class TransactionChoice {
@@ -53,7 +41,7 @@ namespace MenuUtils {
     int promptForChoice();
     std::string promptForEmail();
     std::string promptForPassword(bool isSigningUp = false);
-    double promptForAmount();
+    double promptForAmount(const std::string message = "Amount: ");
     uint32_t promptForUserId();
     void showSuccess(const std::string& message);
     void showError(const std::string& message);

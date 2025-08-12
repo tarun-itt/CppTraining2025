@@ -27,6 +27,6 @@ TransactionLedger User::requestMiniStatement(const LoginResult& loginResult, uin
     return (loginResult.bank->processMiniStatement(accountNumber, loginResult.sessionToken));
 }
 
-TransactionLedger User::requestRangeStatement(const LoginResult& loginResult, uint32_t accountNumber, std::string startDate, std::string endDate) {
-    return (loginResult.bank->processRangeStatement(accountNumber, loginResult.sessionToken, startDate, endDate));
+TransactionLedger User::requestStatementInDateRange(const LoginResult& loginResult, uint32_t accountNumber, std::string startDate, std::string endDate) {
+    return (loginResult.bank->processStatementInDateRange(accountNumber, loginResult.sessionToken, startDate, endDate));
 }

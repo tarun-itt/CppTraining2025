@@ -29,11 +29,12 @@ uint32_t Account::getAccountNumber() const {
 }
 
 TransactionLedger Account::getMiniStatement() {
-    int startIndex = transactions.getSize() < 10 ? 0 : transactions.getSize()-10; 
-    return transactions.getSubArray(transactions,startIndex, 10);
+    int startIndex = transactions.getSize() < 10 ? 0 : transactions.getSize() - 10; 
+    int count =  transactions.getSize() < 10 ? transactions.getSize() : 10;
+    return transactions.getSubArray(transactions, startIndex, count);
 }
 
-TransactionLedger Account::getRangeStatement(std::string startDate, std::string endDate) {
+TransactionLedger Account::getStatementInDateRange(std::string startDate, std::string endDate) {
     int startIndex = -1;
     int endIndex = -1;
     

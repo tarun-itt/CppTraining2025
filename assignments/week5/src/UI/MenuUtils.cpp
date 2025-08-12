@@ -47,10 +47,10 @@ namespace MenuUtils {
         return password;
     }
     
-    double promptForAmount() {
+    double promptForAmount(const std::string message) {
         double amount;
         do {
-            std::cout << "Amount: ";
+            std::cout << message;
             if (!(std::cin >> amount)) {
                 std::cout << "Please enter a valid Amount\n";
                 std::cin.clear();

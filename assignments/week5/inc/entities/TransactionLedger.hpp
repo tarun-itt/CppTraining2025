@@ -13,8 +13,10 @@ class TransactionLedger {
 
     public:
         explicit TransactionLedger(int capacity = 10);
+        TransactionLedger(const TransactionLedger& other);
         ~TransactionLedger();
 
+        TransactionLedger& operator=(const TransactionLedger& other);
         void add(Transaction* t);
         Transaction* operator[](int index) const;
         int getSize() const;

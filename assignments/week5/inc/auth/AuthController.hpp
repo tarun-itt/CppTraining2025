@@ -15,6 +15,7 @@ class AuthController {
         bool logout();
         User* getCurrentUser();
         bool isAdminLoggedIn();
+        bool isEmailValid(const std::string& email);
         
     private:
         User* currentUser;

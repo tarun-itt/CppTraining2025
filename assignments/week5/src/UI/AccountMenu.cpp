@@ -58,26 +58,28 @@ void AccountMenu::showTransactionMenu() {
         std::cout << "Transaction Options:" << std::endl;
         std::cout << "1. Deposit" << std::endl;
         std::cout << "2. Withdraw" << std::endl;
-        std::cout << "3. Back to Main Menu" << std::endl;
+        std::cout << "3. Mini Statement" << std::endl;
+        std::cout << "4. Full Statement" << std::endl;
+        std::cout << "5. Back to Main Menu" << std::endl;
         std::cout << std::endl;
         
         int choice = MenuUtils::promptForChoice();
         
         switch (static_cast<MenuUtils::TransactionChoice>(choice)) {
             case MenuUtils::TransactionChoice::DEPOSIT: {
-                performTransaction(TransactionType::DEPOSIT);
+                showTransactionMenu(TransactionType::DEPOSIT);
                 break;
             }
             case MenuUtils::TransactionChoice::WITHDRAW: {
-                performTransaction(TransactionType::WITHDRAW);
+                showTransactionMenu(TransactionType::WITHDRAW);
                 break;
             }
             case MenuUtils::TransactionChoice::MINI_STATEMENT: {
-                showMiniStatement();
+                printMiniStatement();
                 break;
             }
             case MenuUtils::TransactionChoice::RANGE_STATEMENT: {
-                //showRangeStatement();
+                printFullStatement();
                 break;
             }
             case MenuUtils::TransactionChoice::BACK:{
@@ -111,31 +113,41 @@ void AccountMenu::handleLogout() {
     MenuUtils::showSuccess("Logged out successfully!");
 }
 
-void AccountMenu::showMiniStatement() {
+void AccountMenu::printMiniStatement() {
     AccountHolder *accountHolder = dynamic_cast<AccountHolder*>(loginResult.user);
     TransactionLedger miniTransactions = loginResult.bank->processMiniStatement(accountHolder->getAccountNumber(), loginResult.sessionToken);
 
-    for(int transaction = 0; transaction < miniTransactions.getSize();transaction++){
-        std::cout << "Transaction " << transaction + 1 << ":" << std::endl;
-        std::cout << "Type: " << (miniTransactions[transaction]->getType() == TransactionType::DEPOSIT ? "Deposit" : "Withdrawal") << std::endl;
-        std::cout << "Amount: " << miniTransactions[transaction]->getAmount() << std::endl;
-        std::cout << "Balance After Transaction: " << miniTransactions[transaction]->getBalanceAfterTransaction() << std::endl;
-        std::cout << "Date: " << miniTransactions[transaction]->getTimestamp() << std::endl;
-        std::cout << "--------------------------------" << std::endl;
+    for(int transactionIndex = 0; transactionIndex < miniTransactions.getSize(); transactionIndex++){
+        Transaction* currentTransaction = miniTransactions[transactionIndex];
+        if (currentTransaction != nullptr) {
+            std::cout << "Transaction " << transactionIndex + 1 << ":" << std::endl;
+            std::cout << "Type: " << (currentTransaction->getType() == TransactionType::DEPOSIT ? "Deposit" : "Withdrawal") << std::endl;
+            std::cout << "Amount: " << currentTransaction->getAmount() << std::endl;
+            std::cout << "Balance After Transaction: " << currentTransaction->getBalanceAfterTransaction() << std::endl;
+            std::cout << "Date: " << currentTransaction->getTimestamp() << std::endl;
+            std::cout << "--------------------------------" << std::endl;
+        }
     }
 }
 
-void AccountMenu::showFullStatement() {
+void AccountMenu::printFullStatement() {
     AccountHolder *accountHolder = dynamic_cast<AccountHolder*>(loginResult.user);  
-    TransactionLedger fullTransactions = loginResult.bank->processRangeStatement(accountHolder->getAccountNumber(), loginResult.sessionToken, "2025-01-01", "2025-10-31");
+    TransactionLedger fullTransactions = loginResult.bank->processStatementInDateRange(accountHolder->getAccountNumber(), loginResult.sessionToken, "2025-01-01", "2025-10-31");
 
-    for(int transaction = 0; transaction < fullTransactions.getSize();transaction++){
-        std::cout << "Transaction " << transaction + 1 << ":" << std::endl;
-        std::cout << "Type: " << (fullTransactions[transaction]->getType() == TransactionType::DEPOSIT ? "Deposit" : "Withdrawal") << std::endl;
+    for(int transactionIndex = 0; transactionIndex < fullTransactions.getSize(); transactionIndex++){
+        Transaction* currentTransaction = fullTransactions[transactionIndex];
+        if (currentTransaction != nullptr) {
+            std::cout << "Transaction " << transactionIndex + 1 << ":" << std::endl;
+            std::cout << "Type: " << (currentTransaction->getType() == TransactionType::DEPOSIT ? "Deposit" : "Withdrawal") << std::endl;
+            std::cout << "Amount: " << currentTransaction->getAmount() << std::endl;
+            std::cout << "Balance After Transaction: " << currentTransaction->getBalanceAfterTransaction() << std::endl;
+            std::cout << "Date: " << currentTransaction->getTimestamp() << std::endl;
+            std::cout << "--------------------------------" << std::endl;
+        }
     }
 }
 
-void AccountMenu::performTransaction(TransactionType type) {
+void AccountMenu::showTransactionMenu(TransactionType type) {
     std::string transactionTypeName = type == TransactionType::WITHDRAW ? "WITHDRAW" : "DEPOSIT";
     MenuUtils::showHeader(transactionTypeName);
     

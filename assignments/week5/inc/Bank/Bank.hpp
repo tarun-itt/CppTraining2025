@@ -16,8 +16,8 @@ public:
     uint32_t processCreateAccount(uint32_t accountHolderId, double initialDeposit, std::string token);
     double processGetBalance(uint32_t accountNumber, std::string token);
     TransactionLedger processMiniStatement(uint32_t accountNumber, std::string token);
-    TransactionLedger processRangeStatement(uint32_t accountNumber, std::string token, std::string startDate, std::string endDate);
-    
+    TransactionLedger processStatementInDateRange(uint32_t accountNumber, std::string token, std::string startDate, std::string endDate);
+
     friend class AuthController;
 
 private:

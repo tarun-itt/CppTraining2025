@@ -20,11 +20,11 @@ class AccountMenu {
         
         void showMainMenu();
         void showTransactionMenu();
-        void showMiniStatement();
-        void showFullStatement();
+        void printMiniStatement();
+        void printFullStatement();
         void showAccountInfo();
         void handleLogout();
-        void performTransaction(TransactionType type);
+        void showTransactionMenu(TransactionType type);
 };
 
 #endif 

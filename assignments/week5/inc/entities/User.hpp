@@ -16,7 +16,7 @@ class User {
         virtual uint32_t getUserId() const; 
         virtual double requestBalance(const LoginResult& loginResult, uint32_t accountNumber);
         virtual TransactionLedger requestMiniStatement(const LoginResult& loginResult, uint32_t accountNumber);
-        virtual TransactionLedger requestRangeStatement(const LoginResult& loginResult, uint32_t accountNumber, std::string startDate, std::string endDate);
+        virtual TransactionLedger requestStatementInDateRange(const LoginResult& loginResult, uint32_t accountNumber, std::string startDate, std::string endDate);
         
     protected:
         User(const std::string& email, const std::string& password, const uint32_t userId);

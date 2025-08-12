@@ -48,14 +48,17 @@ LoginResult LoginMenu::run() {
 LoginResult LoginMenu::performLogin() {
     std::string email = MenuUtils::promptForEmail();
     std::string password = MenuUtils::promptForPassword();
-    
-    LoginResult result = authController.login(email, password);
-    
-    if (result.user != nullptr && result.bank != nullptr) {
-        MenuUtils::showSuccess("Login successful!\n");
-    } else {
-        MenuUtils::showError("Login failed. Please check your credentials.\n");
-        result = LoginResult{nullptr, nullptr, ""};
+    LoginResult result = LoginResult{nullptr, nullptr, ""};
+    try {
+        result = authController.login(email, password);
+        
+        if (result.user != nullptr && result.bank != nullptr) {
+            MenuUtils::showSuccess("Login successful!\n");
+        } else {
+            MenuUtils::showError("Login failed. Please check your credentials.\n");
+        }
+    }catch (const std::invalid_argument& e) {
+        MenuUtils::showError(e.what());
     }
     return result;
 } 
