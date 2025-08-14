@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<company>
+    <employee id="1" department="Engineering">
+        <name>Alice</name>
+        <age>30</age>
+        <skills>
+            <skill>C++</skill>
+            <skill>Python</skill>
+        </skills>
+    </employee>
+    <employee id="2" department="Marketing">
+        <name>Bob</name>
+        <age></age> <!-- empty age -->
+        <skills/>
+    </employee>
+    <employee id="3" department="Research, Development">
+        <name>Charlie &quot;The Boss&quot;</name>
+        <age>35</age>
+        <address>
+            <street>123 Main St</street>
+            <city>New York
+NY</city>
+        </address>
+    </employee>
+</company>
