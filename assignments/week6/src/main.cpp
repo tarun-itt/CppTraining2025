@@ -1,12 +1,11 @@
 #include <iostream>
 #include <string>
-#include <fstream>
 #include <limits>
 
-#include "../inc/parser.h"
-#include "../inc/jsonParser.h"
-#include "../inc/csvParser.h"
-#include "../inc/xmlParser.h"
+#include "../inc/Parser.h"
+#include "../inc/JsonParser.h"
+#include "../inc/CsvParser.h"
+#include "../inc/XmlParser.h"
 
 enum class MenuOption {
     JSON = 1,
@@ -57,7 +56,7 @@ void parseFile(int choice) {
             return;
     }
     
-    ParseResult result = parser->parse();
+    ParserResult result = parser->parse();
     if (!result.success()) {
         std::cout << "Error: " << result.message << std::endl;
         delete parser;

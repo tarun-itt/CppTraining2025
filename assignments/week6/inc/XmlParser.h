@@ -1,7 +1,7 @@
 #ifndef XML_PARSER_H
 #define XML_PARSER_H
 
-#include "parser.h"
+#include "Parser.h"
 #include "tinyxml2.h"
 
 using namespace tinyxml2;
@@ -14,8 +14,8 @@ private:
 public:
     XmlParser(const std::string& filename) : Parser(filename) {}
     
-    ParseResult parse() override;
-    std::string dump() const override;
+    ParserResult parse() override;
+    std::string dump() override;
 };
 
 #endif

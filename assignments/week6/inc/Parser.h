@@ -6,7 +6,7 @@
 #include <iostream>
 #include <ostream>
 
-enum class ParseError {
+enum class ParserStatus {
     SUCCESS = 0,
     FILE_NOT_FOUND,
     FILE_EMPTY,
@@ -16,14 +16,13 @@ enum class ParseError {
     UNKNOWN_ERROR
 };
 
-struct ParseResult {
-    ParseError error;
+struct ParserResult {
+    ParserStatus status;
     std::string message;
     
-    ParseResult(ParseError err = ParseError::SUCCESS, const std::string& msg = ""); 
+    ParserResult(ParserStatus status = ParserStatus::SUCCESS, const std::string& msg = ""); 
     
-    bool success() const { return error == ParseError::SUCCESS; }
-    operator bool() const { return error == ParseError::SUCCESS; }
+    bool success() const { return status == ParserStatus::SUCCESS; }
 };
 
 class Parser {
@@ -34,12 +33,10 @@ public:
     Parser(const std::string& fname) : filename(fname) {}
     virtual ~Parser(){}
     
-    virtual ParseResult parse() = 0;
-    virtual std::string dump() const = 0;
+    virtual ParserResult parse() = 0;
+    virtual std::string dump() = 0;
     
     void print(std::ostream& out = std::cout);
-    
-    const std::string& getFilename() const { return filename; }
 };
 
 #endif

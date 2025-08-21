@@ -1,27 +1,28 @@
 #include <iostream>
-#include <iomanip>
 #include <fstream>
 #include <sstream>
 
-#include "../inc/jsonParser.h"
+#include "../inc/JsonParser.h"
 
 
 using json = nlohmann::json;
 
-ParseResult JsonParser::parse() {
+ParserResult JsonParser::parse() {
     try {
+        ParserResult result;
         std::ifstream file(filename);
         if (!file) {
-            return ParseResult(ParseError::FILE_NOT_FOUND, "Could not open file: " + filename);
+            result.status = ParserStatus::FILE_NOT_FOUND;
+            result.message = "Could not open file: " + filename;
         }
         
         data = json::parse(file);
 
-        return ParseResult();
+        return result;
     } catch (const json::parse_error& e) {
-        return ParseResult(ParseError::PARSE_ERROR,  e.what());
+        return ParserResult(ParserStatus::PARSE_ERROR,  e.what());
     } catch (const std::exception& e) {
-        return ParseResult(ParseError::UNKNOWN_ERROR, e.what());
+        return ParserResult(ParserStatus::UNKNOWN_ERROR, e.what());
     }
 }
 
@@ -47,11 +48,11 @@ void JsonParser::dumpJsonValue(const nlohmann::json& value, const std::string& k
             }
         }
     } else {
-        oss << indentString << std::setw(10) << std::left << key << " : " << value.dump() << std::endl;
+        oss << indentString << key << " : " << value.dump() << std::endl;
     }
 }
 
-std::string JsonParser::dump() const {
+std::string JsonParser::dump() {
     std::ostringstream oss;
 
     try {

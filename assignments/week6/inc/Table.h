@@ -1,7 +1,7 @@
 #ifndef TABLE_H
 #define TABLE_H
 
-#include "row.h"
+#include "Row.h"
 
 class Table {
 private:

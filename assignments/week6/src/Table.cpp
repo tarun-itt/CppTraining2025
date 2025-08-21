@@ -1,4 +1,4 @@
-#include "../inc/table.h"
+#include "../inc/Table.h"
 
 Table::Table() : size(0), maxCapacity(0), rows(nullptr) {}
 
@@ -16,6 +16,7 @@ Table& Table::operator=(const Table& other) {
     if (this != &other) {
         if (rows != nullptr) {
             delete[] rows;
+            rows = nullptr;
         }
         
         size = other.size;
@@ -32,6 +33,7 @@ Table& Table::operator=(const Table& other) {
 Table::~Table() {
     if (rows != nullptr) {
         delete[] rows;
+        rows = nullptr;
     }
 }
 

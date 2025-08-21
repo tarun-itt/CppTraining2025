@@ -1,4 +1,4 @@
-#include "../inc/row.h"
+#include "../inc/Row.h"
 
 Row::Row() : size(0), maxCapacity(0), elements(nullptr) {}
 
@@ -32,6 +32,7 @@ Row& Row::operator=(const Row& other) {
 Row::~Row() {
     if (elements != nullptr) {
         delete[] elements;
+        elements = nullptr;
     }
 }
 
