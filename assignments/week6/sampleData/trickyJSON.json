@@ -1,0 +1,31 @@
+{
+    "employees": [
+        {
+            "name": "Alice",
+            "age": 30,
+            "skills": ["C++", "Python", "JavaScript"]
+        },
+        {
+            "name": "Bob",
+            "age": null,
+            "skills": []
+        },
+        {
+            "name": "Charlie \"The Boss\"",
+            "age": 35,
+            "address": {
+                "street": "123 Main St",
+                "city": "New York\nNY"
+            }
+        },
+        {
+            "name": "Diana",
+            "age": 28,
+            "active": true,
+            "projects": [
+                {"name": "Alpha", "budget": 100000},
+                {"name": "Beta", "budget": null}
+            ]
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "company": {
+      "name": "TechCorp",
+      "location": "New York",
+      "employees": [
+        {
+          "id": 101,
+          "name": "Alice",
+          "skills": ["C++", "Python", "SQL"]
+        },
+        {
+          "id": 102,
+          "name": "Bob",
+          "skills": ["Java", "JavaScript"]
+        }
+      ],
+      "departments": {
+        "engineering": {
+          "head": "Alice",
+          "budget": 500000
+        },
+        "hr": {
+          "head": "Carol",
+          "budget": 100000
+        }
+      }
+    }
+  }
+  
