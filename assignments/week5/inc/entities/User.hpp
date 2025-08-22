@@ -5,10 +5,9 @@
 #include <string>
 
 #include "TransactionLedger.hpp"
+#include "../interfaces/IUser.h"
 
-struct LoginResult;
-
-class User {
+class User : public IUser {
     public:
         std::string getEmail() const;
         std::string getPassword() const;

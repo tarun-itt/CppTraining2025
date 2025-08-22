@@ -5,8 +5,9 @@
 
 #include "../entities/Account.hpp"
 #include "../entities/AccountRegistry.hpp"
+#include "../interfaces/IBank.h"
 
-class Bank {
+class Bank : public IBank {
 public:
     static Bank* getInstance();
     bool validateSessionToken(std::string token);

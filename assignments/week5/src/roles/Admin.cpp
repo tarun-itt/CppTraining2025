@@ -20,7 +20,7 @@ uint32_t Admin::requestAddAccountHolder(LoginResult& loginResult, UserDatabaseMa
 }
 
 bool Admin::requestRemoveUser(LoginResult& loginResult, UserDatabaseManager& userManager, const std::string& email) {
-    User* user = userManager.findUser(email);
+    IUser* user = userManager.findUser(email);
     if(user == nullptr) {
         throw std::runtime_error("User not found");
     }

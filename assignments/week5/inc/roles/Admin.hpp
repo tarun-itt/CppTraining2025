@@ -6,10 +6,12 @@
 
 #include "../entities/User.hpp"
 #include "../entities/UserDatabaseManager.hpp"
+#include "../interfaces/IUser.h"
+#include "../interfaces/IAdmin.h"
 
 struct LoginResult;
 
-class Admin : public User {
+class Admin : public IAdmin, public User {
     public:
         Admin(const std::string& email, const std::string& password, uint32_t userId);
         

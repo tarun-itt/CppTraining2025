@@ -4,6 +4,7 @@
 #include "../../inc/auth/AuthController.hpp"
 #include "../../inc/roles/Admin.hpp"
 #include "../../inc/roles/AccountHolder.hpp"
+#include "../../inc/Bank/Bank.hpp"
 
 AuthController::AuthController(UserDatabaseManager& userManager): currentUser(nullptr), userManager(userManager) {
 }
@@ -14,11 +15,11 @@ LoginResult AuthController::login(const std::string& email, const std::string& p
     result.bank = nullptr;
     result.sessionToken = "";
 
-    if (!isEmailValid(email)) {
+if (!isEmailValid(email)) {
         throw std::invalid_argument("Invalid email");
     }
 
-    User* foundUser = userManager.findUser(email);
+    IUser* foundUser = userManager.findUser(email);
     if (foundUser && foundUser->getPassword() == password) {
         result.bank = Bank::getInstance();
         result.sessionToken = result.bank->getSessionToken();
@@ -35,7 +36,7 @@ bool AuthController::logout() {
     return true;
 }
 
-User* AuthController::getCurrentUser() {
+IUser* AuthController::getCurrentUser() {
     return currentUser;
 }
 

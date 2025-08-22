@@ -2,10 +2,9 @@
 #define AccountRegistry_HPP
 
 #include <cstdint>
+#include "../interfaces/IAccountRegistry.h"
 
-#include "../../inc/entities/Account.hpp"
-
-class AccountRegistry {
+class AccountRegistry : public IAccountRegistry {
 private:
     Account** data;
     uint32_t size;

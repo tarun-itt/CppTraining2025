@@ -5,10 +5,12 @@
 #include <string>
 
 #include "../entities/User.hpp"
+#include "../interfaces/IUser.h"
+#include "../interfaces/IAccountHolder.h"
 
 struct LoginResult;
 
-class AccountHolder : public User {
+class AccountHolder : public User, public IAccountHolder {
     public:
         AccountHolder(const std::string& email, const std::string& password, uint32_t userId);
         

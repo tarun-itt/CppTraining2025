@@ -1,7 +1,7 @@
 #include "../../inc/entities/UserRegistry.hpp"
 
 UserRegistry::UserRegistry(int capacity)
-    : size(0), capacity(capacity), data(new User*[capacity]) {}
+    : size(0), capacity(capacity), data(new IUser*[capacity]) {}
 
 UserRegistry::~UserRegistry() {
     for (int userIndex = 0; userIndex < size; userIndex++) {
@@ -11,7 +11,7 @@ UserRegistry::~UserRegistry() {
 }
 
 void UserRegistry::resize(int newCapacity) {
-    User** newData = new User*[newCapacity];
+    IUser** newData = new IUser*[newCapacity];
     for (int userIndex = 0; userIndex < size; userIndex++) {
         newData[userIndex] = data[userIndex];
     }
@@ -20,14 +20,14 @@ void UserRegistry::resize(int newCapacity) {
     capacity = newCapacity;
 }
 
-void UserRegistry::add(User* a) {
+void UserRegistry::add(IUser* a) {
     if (size == capacity) {
         resize(capacity * 2);
     }
     data[size++] = a;
 }
 
-User* UserRegistry::operator[](int index) const {
+IUser* UserRegistry::operator[](int index) const {
     return data[index];
 }
 

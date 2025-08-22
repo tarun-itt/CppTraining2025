@@ -37,7 +37,7 @@ uint32_t UserDatabaseManager::addAccountHolder(const std::string& email, const s
     
 bool UserDatabaseManager::removeUser(const std::string& email) {
     bool success = false;
-    const User* user = findUser(email);
+    const IUser* user = findUser(email);
 
     if (user == nullptr) {
         if (dynamic_cast<const Admin*>(user) != nullptr) {
@@ -51,8 +51,8 @@ bool UserDatabaseManager::removeUser(const std::string& email) {
     return success;
 }
 
-User* UserDatabaseManager::findUser(const std::string& email) {
-    User* user = nullptr;
+IUser* UserDatabaseManager::findUser(const std::string& email) {
+    IUser* user = nullptr;
 
     for (int userIndex = 0; userIndex < admins.getSize(); userIndex++) {
         if (admins[userIndex]->getEmail() == email) {
@@ -71,8 +71,8 @@ User* UserDatabaseManager::findUser(const std::string& email) {
     return user;
 }
 
-User* UserDatabaseManager::findUser(uint32_t userId) {
-    User* user = nullptr;
+IUser* UserDatabaseManager::findUser(uint32_t userId) {
+    IUser* user = nullptr;
 
     for (int userIndex = 0; userIndex < admins.getSize(); userIndex++) {
         if (admins[userIndex]->getUserId() == userId) {

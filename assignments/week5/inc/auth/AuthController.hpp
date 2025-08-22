@@ -6,6 +6,8 @@
 #include "LoginResult.hpp"
 #include "../entities/User.hpp"
 #include "../entities/UserDatabaseManager.hpp"
+#include "../interfaces/IAuthController.h"
+#include "../interfaces/IUser.h"
 
 class AuthController {
     public:
@@ -13,12 +15,12 @@ class AuthController {
         
         LoginResult login(const std::string& email, const std::string& password);
         bool logout();
-        User* getCurrentUser();
+        IUser* getCurrentUser();
         bool isAdminLoggedIn();
         bool isEmailValid(const std::string& email);
         
     private:
-        User* currentUser;
+        IUser* currentUser;
         bool isLoggedIn;
         UserDatabaseManager& userManager;
 

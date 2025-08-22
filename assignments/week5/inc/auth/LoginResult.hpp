@@ -3,12 +3,12 @@
 
 #include <string>
 
-#include "../Bank/Bank.hpp"
-#include "../entities/User.hpp"
+#include "../interfaces/IBank.h"
+#include "../interfaces/IUser.h"
 
 struct LoginResult {
-    Bank* bank;
-    User* user;
+    IBank* bank;
+    IUser* user;
     std::string sessionToken;
 };
 

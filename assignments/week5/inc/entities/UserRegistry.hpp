@@ -4,10 +4,11 @@
 #include <cstdint>
 
 #include "../../inc/entities/User.hpp"
+#include "../../inc/interfaces/IUser.h"
 
 class UserRegistry {
 private:
-    User** data;
+    IUser** data;
     uint32_t size;
     int capacity;
 
@@ -17,8 +18,8 @@ public:
     explicit UserRegistry(int capacity = 10);
     ~UserRegistry();
 
-    void add(User* a);
-    User* operator[](int index) const;
+    void add(IUser* a);
+    IUser* operator[](int index) const;
     int getSize() const;
 
     bool remove(const std::string& email);

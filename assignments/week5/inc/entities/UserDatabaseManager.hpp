@@ -5,13 +5,14 @@
 
 #include "User.hpp"
 #include "UserRegistry.hpp"
+#include "../interfaces/IUser.h"
 
 class UserDatabaseManager {
     public:
         friend class Admin;
         UserDatabaseManager();
-        User* findUser(const std::string& email);
-        User* findUser(uint32_t userId);
+        IUser* findUser(const std::string& email);
+        IUser* findUser(uint32_t userId);
         void setAccountNumber(uint32_t userId, uint32_t accountNumber);
         
     private:
