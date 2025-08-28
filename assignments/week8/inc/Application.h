@@ -9,8 +9,8 @@ class Application {
 private:
     enum class MainMenuChoice {
         CREATE_PLAYLIST = 1,
-        SWITCH_PLAYLIST,
-        MANAGE_PLAYLIST,
+        DELETE_PLAYLIST,
+        SELECT_PLAYLIST,
         EXIT
     };
 
@@ -44,6 +44,7 @@ public:
 private:
     void displayMainMenu();
     void createPlaylist();
+    void deletePlaylist();
     void switchPlaylist();
     void managePlaylistMenu();
     void addSongToPlaylist();

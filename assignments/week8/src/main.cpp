@@ -10,7 +10,7 @@
 int main() {
     try {        
         BASSAudioManager audioManager;
-        SongLibrary songLibrary;
+        SongLibrary songLibrary("music.csv");
         PlaylistWriter playlistWriter("playlists");
     
         PlaylistManager playlistManager(songLibrary, playlistWriter);

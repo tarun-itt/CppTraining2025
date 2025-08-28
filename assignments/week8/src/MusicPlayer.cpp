@@ -1,8 +1,10 @@
+#include <iostream>
+
 #include "MusicPlayer.h"
 #include "SongData.h"
 
 MusicPlayer::MusicPlayer(IAudioManager& player, ISongLibrary& library) 
-    : audioPlayer(player), songLibrary(library) {}
+    : audioManager(player), songLibrary(library) {}
 
 void MusicPlayer::setPlaylist(IPlaylist* newPlaylist) {
     playlist = newPlaylist;
@@ -10,37 +12,46 @@ void MusicPlayer::setPlaylist(IPlaylist* newPlaylist) {
 }
 
 void MusicPlayer::play() {
-    if (!playlist) return;
+    if (!playlist){
+        std::cout << "No playlist selected.\n";
+        return;
+    }
     
     std::string currentSongId = playlist->getCurrent();
-    if (currentSongId.empty()) return;
-    
+    if (currentSongId.empty()){
+        std::cout << "No song selected.\n";
+        return;
+    }
+
     SongData song = songLibrary.getSong(currentSongId);
-    audioPlayer.play(song.path);
-    state = PLAYING;
+    audioManager.play(song.path);
+    state = State::PLAYING;
 }
 
 void MusicPlayer::pause() {
-    if (state == PLAYING) {
-        audioPlayer.pause();
-        state = PAUSED;
+    if (state == State::PLAYING) {
+        audioManager.pause();
+        state = State::PAUSED;
     }
 }
 
 void MusicPlayer::resume() {
-    if (state == PAUSED) {
-        audioPlayer.resume();
-        state = PLAYING;
+    if (state == State::PAUSED) {
+        audioManager.resume();
+        state = State::PLAYING;
     }
 }
 
 void MusicPlayer::stop() {
-    audioPlayer.stop();
-    state = STOPPED;
+    audioManager.stop();
+    state = State::STOPPED;
 }
 
 void MusicPlayer::next() {
-    if (!playlist) return;
+    if (!playlist){
+        std::cout << "No playlist selected.\n";
+        return;
+    }
     
     stop();
     std::string nextSongId = playlist->next();
@@ -50,7 +61,10 @@ void MusicPlayer::next() {
 }
 
 void MusicPlayer::previous() {
-    if (!playlist) return;
+    if (!playlist){
+        std::cout << "No playlist selected.\n";
+        return;
+    }
     
     stop();
     std::string prevSongId = playlist->previous();
@@ -60,9 +74,9 @@ void MusicPlayer::previous() {
 }
 
 bool MusicPlayer::isPlaying() const {
-    return state == PLAYING;
+    return state == State::PLAYING;
 }
 
 bool MusicPlayer::isPaused() const {
-    return state == PAUSED;
+    return state == State::PAUSED;
 } 

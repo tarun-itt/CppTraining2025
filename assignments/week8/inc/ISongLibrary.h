@@ -12,7 +12,6 @@ public:
     virtual SongData getSong(const std::string& id) const = 0;
     virtual std::vector<SongData> getAllSongs() const = 0;
     virtual bool hasSong(const std::string& id) const = 0;
-    virtual void addSong(const SongData& song) = 0;
 };
 
 #endif

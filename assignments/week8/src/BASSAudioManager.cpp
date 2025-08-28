@@ -25,7 +25,7 @@ void BASSAudioManager::play(const std::string& path) {
     stop();
     
     currentStream = BASS_StreamCreateFile(0, path.c_str(), 0, 0, BASS_STREAM_AUTOFREE);
-    
+    std::cout << "Current stream: " << currentStream << std::endl;
     if (currentStream) {
         if (BASS_ChannelPlay(currentStream, 0)) {
             playing = true;
@@ -36,7 +36,7 @@ void BASSAudioManager::play(const std::string& path) {
             currentStream = 0;
         }
     } else {
-        std::cerr << "Failed to load audio file: " << path << std::endl;
+        std::cerr << "Failed to load audio file:" << path << std::endl;
     }
 }
 

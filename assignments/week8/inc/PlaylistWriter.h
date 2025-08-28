@@ -12,8 +12,9 @@ private:
 public:
     PlaylistWriter(const std::string& path);
     void save(const std::vector<std::string>& songs, const std::string& name) override;
+    void deletePlaylist(const std::string& name) override;
     std::vector<std::string> load(const std::string& name) override;
-    std::vector<std::string> getAllPlaylists() const override;
+    std::vector<std::string> discoverPlaylists() const override;
 };
 
 #endif

@@ -8,11 +8,11 @@
 
 class MusicPlayer : public IMusicPlayer {
 private:
-    IAudioManager& audioPlayer;
+    IAudioManager& audioManager;
     IPlaylist* playlist = nullptr;
     ISongLibrary& songLibrary;  
-    enum State { STOPPED, PLAYING, PAUSED };
-    State state = STOPPED;
+    enum class State { STOPPED, PLAYING, PAUSED };
+    State state = State::STOPPED;
 
 public:
     MusicPlayer(IAudioManager& player, ISongLibrary& library);

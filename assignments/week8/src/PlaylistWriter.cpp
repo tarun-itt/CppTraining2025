@@ -26,6 +26,13 @@ void PlaylistWriter::save(const std::vector<std::string>& songs, const std::stri
     }
 }
 
+void PlaylistWriter::deletePlaylist(const std::string& name) {
+    std::string filename = basePath + "/" + name + ".txt";
+    if (std::remove(filename.c_str()) != 0) {
+        std::cout << "Error deleting playlist '" << name << "'.\n";
+    }
+}
+
 std::vector<std::string> PlaylistWriter::load(const std::string& name) {
     std::vector<std::string> songs;
     std::ifstream file(basePath + "/" + name + ".txt");
@@ -40,7 +47,7 @@ std::vector<std::string> PlaylistWriter::load(const std::string& name) {
     return songs;
 }
 
-std::vector<std::string> PlaylistWriter::getAllPlaylists() const {
+std::vector<std::string> PlaylistWriter::discoverPlaylists() const {
     std::vector<std::string> playlists;
     
     for (const auto& entry : fs::directory_iterator(basePath)) {

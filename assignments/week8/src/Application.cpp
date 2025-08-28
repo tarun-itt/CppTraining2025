@@ -27,13 +27,12 @@ void Application::run() {
                         createPlaylist();
                         break;
                     }
-                    case MainMenuChoice::SWITCH_PLAYLIST: {
-                        switchPlaylist();
-                        activePlaylist = playlistManager.getActivePlaylist();
+                    case MainMenuChoice::DELETE_PLAYLIST: {
+                        deletePlaylist();
                         break;
                     }
-                    case MainMenuChoice::MANAGE_PLAYLIST: {
-                        managePlaylistMenu();
+                    case MainMenuChoice::SELECT_PLAYLIST: {
+                        switchPlaylist();
                         activePlaylist = playlistManager.getActivePlaylist();
                         break;
                     }
@@ -44,9 +43,10 @@ void Application::run() {
                     }
                     default: std::cout << "Invalid choice. Try again.\n";
                 }
-            }
-            else{
+            } else {
                 std::cout << "Invalid choice. Try again.\n";
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             }
         }
     }
@@ -55,9 +55,9 @@ void Application::run() {
 void Application::displayMainMenu() {
     std::cout << "\n=== Music Player ===\n";
     std::cout << "1. Create New Playlist\n";
-    std::cout << "2. Switch Active Playlist\n";
-    std::cout << "3. Manage Active Playlist\n";
-    std::cout << "4. Exit\n";
+    std::cout << "2. Delete Playlist\n";
+    std::cout << "3. Select Playlist\n";
+    std::cout << "4. Exit\n\n";
     std::cout << "Choose an option: ";
 }
 
@@ -72,28 +72,52 @@ void Application::createPlaylist() {
     }
 }
 
+void Application::deletePlaylist() {
+    std::cout<< "\n=== Delete Playlist ===\n";
+    std::vector<std::string> playlists = playlistManager.getAllPlaylistNames();
+    if (!playlists.empty()) {        
+        std::cout << "Available playlists:\n";
+        for (size_t i = 0; i < playlists.size(); i++) {
+            std::cout << (i + 1) << ". " << playlists[i] << "\n";
+        }
+    }
+    int choice;
+    std::cout << "Select a playlist to delete: ";
+    if(std::cin >> choice && choice > 0 && choice <= static_cast<int>(playlists.size())) {
+        playlistManager.deletePlaylist(playlists[choice - 1]);
+        std::cout << "Playlist '" << playlists[choice - 1] << "' deleted!\n";
+    }
+    else{
+        std::cout << "Invalid selection.\n";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+}
+
 void Application::switchPlaylist() {
     std::vector<std::string> playlists = playlistManager.getAllPlaylistNames();
     if (!playlists.empty()) {        
         std::cout << "Available playlists:\n";
 
-        for (int i = 0; i < playlists.size(); i++) {
+        for (size_t i = 0; i < playlists.size(); i++) {
             std::cout << (i + 1) << ". " << playlists[i] << "\n";
         }
         
         int choice;
         std::cout << "Select a playlist: ";
         
-        if(std::cin >> choice && choice > 0 && choice <= playlists.size()) {
+        if(std::cin >> choice && choice > 0 && choice <= static_cast<int>(playlists.size())) {
             playlistManager.setActivePlaylist(playlists[choice - 1]);
+            if(playlistManager.getActivePlaylist() == nullptr){
+                std::cout << "Playlist does not exist.\n";
+                return;
+            }
             musicPlayer.setPlaylist(playlistManager.getActivePlaylist());
             std::cout << "Now using '" << playlists[choice - 1] << "' playlist.\n";
         } else {
             std::cout << "Invalid selection.\n";
             std::cin.clear();
         }
-
-    
     } else {
         std::cout << "No playlists available.\n";
         return;
@@ -107,8 +131,8 @@ void Application::managePlaylistMenu() {
         return;
     }
     
-    int choice;
-    while (true) {
+    int choice = 0;
+    while (choice != 10) {
         std::cout << "\n=== Playlist: " << playlist->getName() << " ===\n";
         std::cout << "1. Play/Pause\n";
         std::cout << "2. Next Song\n";
@@ -122,10 +146,10 @@ void Application::managePlaylistMenu() {
         std::cout << "10. Go to Main Menu\n";
         std::cout << "Choose an option: ";
       
-        if(std::cin >> choice && choice > 0 && choice <= 10){
+        if(std::cin >> choice){
             switch (static_cast<PlaylistMenuChoice>(choice)) {
                 case PlaylistMenuChoice::PLAY_PAUSE: {
-                    if (musicPlayer.isPlaying()) {
+                    if (!musicPlayer.isPlaying()) {
                         musicPlayer.play();
                     } else {
                         musicPlayer.pause();
@@ -165,15 +189,15 @@ void Application::managePlaylistMenu() {
                     break;
                 }
                 case PlaylistMenuChoice::MAIN_MENU: {
-                    break;
+                    playlistManager.setActivePlaylist("");
+                    return;
                 }
                 default: std::cout << "Invalid choice. Try again.\n";
             }
-            if(choice == static_cast<int>(PlaylistMenuChoice::MAIN_MENU)){
-                return;
-            }
         } else {
             std::cout << "Invalid choice. Try again.\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }
 }
@@ -184,14 +208,14 @@ void Application::addSongToPlaylist() {
     
     if (!allSongs.empty()) {
         std::cout << "Available songs:\n";
-        for (int i = 0; i < allSongs.size(); i++) {
+        for (size_t i = 0; i < allSongs.size(); i++) {
             std::cout << (i + 1) << ". " << allSongs[i].title << " - " << allSongs[i].artist << "\n";
         }
         
         int choice;
         std::cout << "Select a song to add: ";
         
-        if (std::cin >> choice && choice > 0 && choice <= allSongs.size()) {
+        if (std::cin >> choice && choice > 0 && choice <= static_cast<int>(allSongs.size())) {
             playlist->addSong(allSongs[choice - 1].id);
             std::cout << "Song added to playlist.\n";
         } else {
@@ -207,11 +231,11 @@ void Application::addSongToPlaylist() {
 
 void Application::removeSongFromPlaylist() {
     IPlaylist* playlist = playlistManager.getActivePlaylist();
-    auto songs = playlist->getSongs();
+    auto songs = playlist->getAllSongIds();
     
     if (!songs.empty()) {
         std::cout << "Songs in playlist:\n";
-        for (int i = 0; i < songs.size(); i++) {
+        for (size_t i = 0; i < songs.size(); i++) {
             SongData song = songLibrary.getSong(songs[i]);
             std::cout << (i + 1) << ". " << song.title << " - " << song.artist << "\n";
         }
@@ -219,7 +243,7 @@ void Application::removeSongFromPlaylist() {
         int choice;
         std::cout << "Select a song to remove: ";
         
-        if (std::cin >> choice && choice > 0 && choice <= songs.size()) {
+        if (std::cin >> choice && choice > 0 && choice <= static_cast<int>(songs.size())) {
             musicPlayer.stop();
             playlist->removeSong(choice - 1);
             musicPlayer.play();
@@ -237,11 +261,11 @@ void Application::removeSongFromPlaylist() {
 
 void Application::moveSongInPlaylist(enum MoveSong direction) {
     IPlaylist* playlist = playlistManager.getActivePlaylist();
-    auto songs = playlist->getSongs();
+    auto songs = playlist->getAllSongIds();
     
     if (!songs.empty()) {
         std::cout << "Songs in playlist:\n";
-        for (int i = 0; i < songs.size(); i++) {
+        for (size_t i = 0; i < songs.size(); i++) {
             SongData song = songLibrary.getSong(songs[i]);
             std::cout << (i + 1) << ". " << song.title << " - " << song.artist << "\n";
         }
@@ -249,7 +273,7 @@ void Application::moveSongInPlaylist(enum MoveSong direction) {
         int choice;
         std::cout << "Select a song to move " << (direction == MoveSong::UP ? "up" : "down") << ": ";
         
-        if (std::cin >> choice && choice > 0 && choice <= songs.size()) {
+        if (std::cin >> choice && choice > 0 && choice <= static_cast<int>(songs.size())) {
             if (direction == MoveSong::UP) {
                 playlist->moveUp(choice - 1);
             } else {
@@ -269,7 +293,7 @@ void Application::moveSongInPlaylist(enum MoveSong direction) {
 
 void Application::viewPlaylistSongs() {
     IPlaylist* playlist = playlistManager.getActivePlaylist();
-    auto songs = playlist->getSongs();
+    auto songs = playlist->getAllSongIds();
     
     if (songs.empty()) {
         std::cout << "Playlist is empty.\n";
@@ -277,10 +301,10 @@ void Application::viewPlaylistSongs() {
     }
     
     std::cout << "Songs in '" << playlist->getName() << "':\n";
-    for (int i = 0; i < songs.size(); i++) {
+    for (size_t i = 0; i < songs.size(); i++) {
         SongData song = songLibrary.getSong(songs[i]);
         std::cout << (i + 1) << ". " << song.title << " - " << song.artist;
-        if (i == playlist->getCurrentIndex()) {
+        if (static_cast<size_t>(playlist->getCurrentIndex()) == i) {
             std::cout << " [Current]";
         }
         std::cout << "\n";
@@ -294,17 +318,17 @@ void Application::selectSongToPlay() {
         return;
     }
     
-    auto songs = playlist->getSongs();
+    auto songs = playlist->getAllSongIds();
     if (songs.empty()) {
-        std::cout << "Playlist is empty. Add some songs first.\n";
+        std::cout << "Playlist is empty.\n";
         return;
     }
     
     std::cout << "Songs in playlist:\n";
-    for (int i = 0; i < songs.size(); i++) {
+    for (size_t i = 0; i < songs.size(); i++) {
         SongData song = songLibrary.getSong(songs[i]);
         std::cout << (i + 1) << ". " << song.title << " - " << song.artist;
-        if (i == playlist->getCurrentIndex()) {
+        if (static_cast<size_t>(playlist->getCurrentIndex()) == i) {
             std::cout << " [Current]";
         }
         std::cout << "\n";
@@ -313,7 +337,7 @@ void Application::selectSongToPlay() {
     int choice;
     std::cout << "Select a song to play: ";
     
-    if (std::cin >> choice && choice > 0 && choice <= songs.size()) {
+    if (std::cin >> choice && choice > 0 && choice <= static_cast<int>(songs.size())) {
         playlist->setCurrentIndex(choice - 1);
         musicPlayer.setPlaylist(playlist);
         musicPlayer.play();

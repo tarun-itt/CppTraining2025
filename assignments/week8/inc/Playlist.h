@@ -23,7 +23,7 @@ public:
     std::string previous() override;
     std::string getCurrent() const override;
     std::string getName() const override;
-    std::vector<std::string> getSongs() const override;
+    std::vector<std::string> getAllSongIds() const override;
     void setCurrentIndex(int index) override;
     int getCurrentIndex() const override;
 };

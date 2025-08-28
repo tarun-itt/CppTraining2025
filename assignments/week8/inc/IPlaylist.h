@@ -15,7 +15,7 @@ public:
     virtual std::string previous() = 0;
     virtual std::string getCurrent() const = 0;
     virtual std::string getName() const = 0;
-    virtual std::vector<std::string> getSongs() const = 0;
+    virtual std::vector<std::string> getAllSongIds() const = 0;
     virtual void setCurrentIndex(int index) = 0;
     virtual int getCurrentIndex() const = 0;
 };

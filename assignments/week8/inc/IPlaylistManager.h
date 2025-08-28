@@ -11,6 +11,7 @@ public:
     virtual ~IPlaylistManager() = default;
     
     virtual void createPlaylist(const std::string& name) = 0;
+    virtual void deletePlaylist(const std::string& name) = 0;
     virtual void setActivePlaylist(const std::string& name) = 0;
     virtual IPlaylist* getActivePlaylist() const = 0;
     virtual std::vector<std::string> getAllPlaylistNames() const = 0;

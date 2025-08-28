@@ -1,0 +1,104 @@
+[
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/lib -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer.dir/src/main.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/main.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/main.cpp",
+  "output": "CMakeFiles/MusicPlayer.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/lib -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer.dir/src/BASSAudioManager.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/BASSAudioManager.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/BASSAudioManager.cpp",
+  "output": "CMakeFiles/MusicPlayer.dir/src/BASSAudioManager.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/lib -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer.dir/src/SongLibrary.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/SongLibrary.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/SongLibrary.cpp",
+  "output": "CMakeFiles/MusicPlayer.dir/src/SongLibrary.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/lib -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer.dir/src/PlaylistWriter.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/PlaylistWriter.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/PlaylistWriter.cpp",
+  "output": "CMakeFiles/MusicPlayer.dir/src/PlaylistWriter.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/lib -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer.dir/src/Playlist.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/Playlist.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/Playlist.cpp",
+  "output": "CMakeFiles/MusicPlayer.dir/src/Playlist.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/lib -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer.dir/src/PlaylistManager.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/PlaylistManager.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/PlaylistManager.cpp",
+  "output": "CMakeFiles/MusicPlayer.dir/src/PlaylistManager.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/lib -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer.dir/src/MusicPlayer.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/MusicPlayer.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/MusicPlayer.cpp",
+  "output": "CMakeFiles/MusicPlayer.dir/src/MusicPlayer.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/lib -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer.dir/src/Application.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/Application.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/Application.cpp",
+  "output": "CMakeFiles/MusicPlayer.dir/src/Application.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer_tests.dir/test/PlaylistGTest.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/test/PlaylistGTest.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/test/PlaylistGTest.cpp",
+  "output": "CMakeFiles/MusicPlayer_tests.dir/test/PlaylistGTest.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer_tests.dir/test/MusicPlayerGTest.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/test/MusicPlayerGTest.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/test/MusicPlayerGTest.cpp",
+  "output": "CMakeFiles/MusicPlayer_tests.dir/test/MusicPlayerGTest.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer_tests.dir/test/PlaylistManagerGTest.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/test/PlaylistManagerGTest.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/test/PlaylistManagerGTest.cpp",
+  "output": "CMakeFiles/MusicPlayer_tests.dir/test/PlaylistManagerGTest.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer_tests.dir/test/PlaylistWriterGTest.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/test/PlaylistWriterGTest.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/test/PlaylistWriterGTest.cpp",
+  "output": "CMakeFiles/MusicPlayer_tests.dir/test/PlaylistWriterGTest.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer_tests.dir/src/SongLibrary.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/SongLibrary.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/SongLibrary.cpp",
+  "output": "CMakeFiles/MusicPlayer_tests.dir/src/SongLibrary.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer_tests.dir/src/Playlist.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/Playlist.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/Playlist.cpp",
+  "output": "CMakeFiles/MusicPlayer_tests.dir/src/Playlist.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer_tests.dir/src/MusicPlayer.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/MusicPlayer.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/MusicPlayer.cpp",
+  "output": "CMakeFiles/MusicPlayer_tests.dir/src/MusicPlayer.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer_tests.dir/src/PlaylistManager.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/PlaylistManager.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/PlaylistManager.cpp",
+  "output": "CMakeFiles/MusicPlayer_tests.dir/src/PlaylistManager.cpp.o"
+},
+{
+  "directory": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8",
+  "command": "/usr/bin/c++  -I/home/tarunsharma/Documents/CppTraining2025/assignments/week8/inc -g -g -O0 -Wall -Wextra -std=gnu++17 -o CMakeFiles/MusicPlayer_tests.dir/src/PlaylistWriter.cpp.o -c /home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/PlaylistWriter.cpp",
+  "file": "/home/tarunsharma/Documents/CppTraining2025/assignments/week8/src/PlaylistWriter.cpp",
+  "output": "CMakeFiles/MusicPlayer_tests.dir/src/PlaylistWriter.cpp.o"
+}
+]

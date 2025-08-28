@@ -4,6 +4,11 @@ project(MusicPlayer)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Debug flags
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -Wall -Wextra")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -DNDEBUG")
+
 # Generate compile_commands.json for IntelliSense
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -20,6 +25,19 @@ set(SOURCES
     src/PlaylistManager.cpp
     src/MusicPlayer.cpp
     src/Application.cpp
+)
+
+# Set test source files
+set(TEST_SOURCES
+    test/PlaylistGTest.cpp
+    test/MusicPlayerGTest.cpp
+    test/PlaylistManagerGTest.cpp
+    test/PlaylistWriterGTest.cpp
+    src/SongLibrary.cpp
+    src/Playlist.cpp
+    src/MusicPlayer.cpp
+    src/PlaylistManager.cpp
+    src/PlaylistWriter.cpp
 )
 
 # Create main executable
@@ -42,17 +60,6 @@ target_link_libraries(${PROJECT_NAME} ${BASS_LIBRARY})
 
 # Find GTest for testing
 find_package(GTest REQUIRED)
-
-# Set test sources
-set(TEST_SOURCES
-    test/test_main.cpp
-    test/test_SongLibrary.cpp
-    test/test_StandardPlaylist.cpp
-    test/test_MusicPlayer.cpp
-    src/SongLibrary.cpp
-    src/Playlist.cpp
-    src/MusicPlayer.cpp
-)
 
 # Create test executable
 add_executable(${PROJECT_NAME}_tests ${TEST_SOURCES})

@@ -56,7 +56,7 @@ std::string Playlist::getName() const {
     return name;
 }
 
-std::vector<std::string> Playlist::getSongs() const {
+std::vector<std::string> Playlist::getAllSongIds() const {
     return songIds;
 }
 

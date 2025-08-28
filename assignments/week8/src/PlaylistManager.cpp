@@ -17,8 +17,19 @@ void PlaylistManager::createPlaylist(const std::string& name) {
     }
 }
 
-void PlaylistManager::setActivePlaylist(const std::string& name) {
+void PlaylistManager::deletePlaylist(const std::string& name) {
     if (playlists.find(name) != playlists.end()) {
+        delete playlists[name];
+        playlists.erase(name);
+        playlistWriter.deletePlaylist(name);
+        setActivePlaylist("");
+    }
+}
+
+void PlaylistManager::setActivePlaylist(const std::string& name) {
+    if(name.empty()){
+        activePlaylist = nullptr;
+    } else if (playlists.find(name) != playlists.end()) {
         activePlaylist = playlists[name];
     }
 }
@@ -37,17 +48,17 @@ std::vector<std::string> PlaylistManager::getAllPlaylistNames() const {
 
 void PlaylistManager::saveAllPlaylists() {
     for (const auto& pair : playlists) {
-        playlistWriter.save(pair.second->getSongs(), pair.first);
-    }
+        playlistWriter.save(pair.second->getAllSongIds(), pair.first);
+    }   
 }
 
 void PlaylistManager::loadPlaylists() {
-    auto playlistNames = playlistWriter.getAllPlaylists();
-    for (const auto& name : playlistNames) {
-        auto songIds = playlistWriter.load(name);
-        auto playlist = new Playlist(name);
+    std::vector<std::string> playlistNames = playlistWriter.discoverPlaylists();
+    for (const std::string& name : playlistNames) {
+        std::vector<std::string> songIds = playlistWriter.load(name);
+        IPlaylist* playlist = new Playlist(name);
         
-        for (const auto& songId : songIds) {
+        for (const std::string& songId : songIds) {
             if (songLibrary.hasSong(songId)) {
                 playlist->addSong(songId);
             }
@@ -55,10 +66,7 @@ void PlaylistManager::loadPlaylists() {
         
         playlists[name] = playlist;
     }
-    
-    if (!playlists.empty() && !activePlaylist) {
-        activePlaylist = playlists.begin()->second;
-    }
+
 }
 
 void PlaylistManager::cleanupPlaylists() {

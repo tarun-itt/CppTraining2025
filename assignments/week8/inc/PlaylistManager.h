@@ -22,6 +22,7 @@ public:
     ~PlaylistManager();
 
     void createPlaylist(const std::string& name);
+    void deletePlaylist(const std::string& name);
     void setActivePlaylist(const std::string& name);
     IPlaylist* getActivePlaylist() const;
     std::vector<std::string> getAllPlaylistNames() const;
