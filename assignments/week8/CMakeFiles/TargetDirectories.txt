@@ -1,5 +1,0 @@
-/home/tarunsharma/Documents/CppTraining2025/assignments/week8/CMakeFiles/MusicPlayer.dir
-/home/tarunsharma/Documents/CppTraining2025/assignments/week8/CMakeFiles/MusicPlayer_tests.dir
-/home/tarunsharma/Documents/CppTraining2025/assignments/week8/CMakeFiles/test.dir
-/home/tarunsharma/Documents/CppTraining2025/assignments/week8/CMakeFiles/edit_cache.dir
-/home/tarunsharma/Documents/CppTraining2025/assignments/week8/CMakeFiles/rebuild_cache.dir
