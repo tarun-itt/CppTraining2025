@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <string>
 
-#include "Transaction.hpp"
-#include "TransactionLedger.hpp"
+#include "Transaction.h"
+#include "TransactionLedger.h"
 
 class Account {
     public:

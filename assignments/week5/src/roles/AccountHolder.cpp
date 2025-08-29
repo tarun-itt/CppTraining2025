@@ -1,7 +1,7 @@
 #include <cstdint>
 
-#include "../../inc/roles/AccountHolder.hpp"
-#include "../../inc/auth/LoginResult.hpp"
+#include "../../inc/roles/AccountHolder.h"
+#include "../../inc/auth/LoginResult.h"
 #include "../../inc/interfaces/IUser.h"
 
 AccountHolder::AccountHolder(const std::string& email, const std::string& password, uint32_t userId): User(email, password, userId), accountNumber(0) {}

@@ -1,4 +1,4 @@
-#include "../../inc/UI/MenuUtils.hpp"
+#include "../../inc/UI/MenuUtils.h"
 
 namespace MenuUtils {
     void showHeader(const std::string& title) {

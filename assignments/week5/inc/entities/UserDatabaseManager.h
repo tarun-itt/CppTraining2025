@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "User.hpp"
-#include "UserRegistry.hpp"
+#include "User.h"
+#include "UserRegistry.h"
 #include "../interfaces/IUser.h"
 
 class UserDatabaseManager {

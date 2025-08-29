@@ -1,7 +1,7 @@
 #include <string>
 
-#include "../../inc/entities/User.hpp"
-#include "../../inc/auth/LoginResult.hpp"
+#include "../../inc/entities/User.h"
+#include "../../inc/auth/LoginResult.h"
 
 User::User(const std::string& email, const std::string& password, const uint32_t userId) 
     : email(email), password(password), userId(userId) {

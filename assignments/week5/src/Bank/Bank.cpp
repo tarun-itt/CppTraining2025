@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "../../inc/Bank/Bank.hpp"
+#include "../../inc/Bank/Bank.h"
 
 Bank* Bank::instance = nullptr;
 

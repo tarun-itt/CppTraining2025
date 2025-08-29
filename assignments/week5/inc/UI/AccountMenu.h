@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include "MenuUtils.hpp"
-#include "../auth/AuthController.hpp"
-#include "../auth/LoginResult.hpp"
+#include "MenuUtils.h"
+#include "../auth/AuthController.h"
+#include "../auth/LoginResult.h"
 
 class AccountMenu {
     public:

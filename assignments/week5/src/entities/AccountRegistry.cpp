@@ -1,4 +1,4 @@
-#include "../../inc/entities/AccountRegistry.hpp"
+#include "../../inc/entities/AccountRegistry.h"
 
 AccountRegistry::AccountRegistry(int capacity)
     : size(0), capacity(capacity), data(new Account*[capacity]) {}

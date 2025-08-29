@@ -2,7 +2,7 @@
 #define IBANK_HPP
 
 #include <string>
-#include "../../inc/entities/TransactionLedger.hpp"
+#include "../../inc/entities/TransactionLedger.h"
 
 class IBank {
 public:

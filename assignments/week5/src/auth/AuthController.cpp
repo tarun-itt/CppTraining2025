@@ -1,10 +1,10 @@
 #include <string>
 #include <stdexcept>
 
-#include "../../inc/auth/AuthController.hpp"
-#include "../../inc/roles/Admin.hpp"
-#include "../../inc/roles/AccountHolder.hpp"
-#include "../../inc/Bank/Bank.hpp"
+#include "../../inc/auth/AuthController.h"
+#include "../../inc/roles/Admin.h"
+#include "../../inc/roles/AccountHolder.h"
+#include "../../inc/Bank/Bank.h"
 
 AuthController::AuthController(UserDatabaseManager& userManager): currentUser(nullptr), userManager(userManager) {
 }

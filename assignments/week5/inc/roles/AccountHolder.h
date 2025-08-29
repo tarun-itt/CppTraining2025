@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-#include "../entities/User.hpp"
+#include "../entities/User.h"
 #include "../interfaces/IUser.h"
 #include "../interfaces/IAccountHolder.h"
 

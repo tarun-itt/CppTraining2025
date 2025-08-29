@@ -1,9 +1,9 @@
 #include <iostream>
 #include <limits>
 
-#include "../../inc/UI/AdminMenu.hpp"
-#include "../../inc/roles/Admin.hpp"
-#include "../../inc/roles/AccountHolder.hpp"
+#include "../../inc/UI/AdminMenu.h"
+#include "../../inc/roles/Admin.h"
+#include "../../inc/roles/AccountHolder.h"
 
 AdminMenu::AdminMenu(AuthController& authController, LoginResult& loginResult, UserDatabaseManager& userManager)
     : authController(authController), loginResult(loginResult), userManager(userManager) {

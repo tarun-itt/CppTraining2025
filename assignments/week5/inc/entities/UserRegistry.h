@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "../../inc/entities/User.hpp"
+#include "../../inc/entities/User.h"
 #include "../../inc/interfaces/IUser.h"
 
 class UserRegistry {

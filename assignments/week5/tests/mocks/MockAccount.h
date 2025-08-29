@@ -2,8 +2,9 @@
 #define MOCKACCOUNT_HPP
 
 #include <gmock/gmock.h>
-#include "../../inc/interfaces/IAccount.h"
-#include "../../inc/entities/Transaction.hpp"
+
+#include "interfaces/IAccount.h"
+#include "entities/Transaction.h"
 
 class MockAccount : public IAccount {
 public:

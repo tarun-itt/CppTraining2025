@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "../entities/Account.hpp"
-#include "../entities/AccountRegistry.hpp"
+#include "../entities/Account.h"
+#include "../entities/AccountRegistry.h"
 #include "../interfaces/IBank.h"
 
 class Bank : public IBank {

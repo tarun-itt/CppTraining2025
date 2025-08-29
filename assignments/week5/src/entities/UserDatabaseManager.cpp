@@ -1,8 +1,8 @@
 #include <cstdint>
 
-#include "../../inc/entities/UserDatabaseManager.hpp"
-#include "../../inc/roles/Admin.hpp"
-#include "../../inc/roles/AccountHolder.hpp"
+#include "../../inc/entities/UserDatabaseManager.h"
+#include "../../inc/roles/Admin.h"
+#include "../../inc/roles/AccountHolder.h"
 
 UserDatabaseManager::UserDatabaseManager() {
     addAdmin("admin@bank.com", "admin123"); //default admin

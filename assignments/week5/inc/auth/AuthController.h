@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include "LoginResult.hpp"
-#include "../entities/User.hpp"
-#include "../entities/UserDatabaseManager.hpp"
+#include "LoginResult.h"
+#include "../entities/User.h"
+#include "../entities/UserDatabaseManager.h"
 #include "../interfaces/IAuthController.h"
 #include "../interfaces/IUser.h"
 

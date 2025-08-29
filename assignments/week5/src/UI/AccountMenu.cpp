@@ -1,8 +1,8 @@
 #include <iostream>
 #include <limits>
 
-#include "../../inc/UI/AccountMenu.hpp"
-#include "../../inc/roles/AccountHolder.hpp"
+#include "../../inc/UI/AccountMenu.h"
+#include "../../inc/roles/AccountHolder.h"
 
 AccountMenu::AccountMenu(AuthController& authController, LoginResult& loginResult)
     : authController(authController), loginResult(loginResult) {

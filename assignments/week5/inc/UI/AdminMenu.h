@@ -3,10 +3,10 @@
 
 #include <string>
 
-#include "MenuUtils.hpp"
-#include "../auth/AuthController.hpp"
-#include "../auth/LoginResult.hpp"
-#include "../entities/UserDatabaseManager.hpp"
+#include "MenuUtils.h"
+#include "../auth/AuthController.h"
+#include "../auth/LoginResult.h"
+#include "../entities/UserDatabaseManager.h"
 
 class AdminMenu {
     public:

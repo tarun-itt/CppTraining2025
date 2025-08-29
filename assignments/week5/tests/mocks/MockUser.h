@@ -2,7 +2,8 @@
 #define MOCKUSER_HPP
 
 #include <gmock/gmock.h>
-#include "../../inc/interfaces/IUser.h"
+
+#include "interfaces/IUser.h"
 
 class MockUser : public IUser {
 public:

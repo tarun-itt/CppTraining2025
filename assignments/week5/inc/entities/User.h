@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-#include "TransactionLedger.hpp"
+#include "TransactionLedger.h"
 #include "../interfaces/IUser.h"
 
 class User : public IUser {

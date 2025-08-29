@@ -1,11 +1,11 @@
 #include <ctime>
 #include <cstdlib>
 
-#include "../inc/entities/UserDatabaseManager.hpp"
-#include "../inc/auth/AuthController.hpp"
-#include "../inc/UI/LoginMenu.hpp"
-#include "../inc/UI/AdminMenu.hpp"
-#include "../inc/UI/AccountMenu.hpp"
+#include "../inc/entities/UserDatabaseManager.h"
+#include "../inc/auth/AuthController.h"
+#include "../inc/UI/LoginMenu.h"
+#include "../inc/UI/AdminMenu.h"
+#include "../inc/UI/AccountMenu.h"
 
 int main() {
     srand(time(nullptr));

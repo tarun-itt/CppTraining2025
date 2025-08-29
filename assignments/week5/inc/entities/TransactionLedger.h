@@ -1,7 +1,7 @@
 #ifndef TransactionLedger_HPP
 #define TransactionLedger_HPP
 
-#include "Transaction.hpp"
+#include "Transaction.h"
 
 class TransactionLedger {
     private:

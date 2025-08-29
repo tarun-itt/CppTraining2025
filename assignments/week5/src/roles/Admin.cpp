@@ -1,9 +1,9 @@
 #include <cstdint>
 #include <stdexcept>
 
-#include "../../inc/roles/Admin.hpp"
-#include "../../inc/auth/LoginResult.hpp"
-#include "../../inc/roles/AccountHolder.hpp"
+#include "../../inc/roles/Admin.h"
+#include "../../inc/auth/LoginResult.h"
+#include "../../inc/roles/AccountHolder.h"
 
 Admin::Admin(const std::string& email, const std::string& password, uint32_t userId)
     : User(email, password, userId) {

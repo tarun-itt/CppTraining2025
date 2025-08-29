@@ -1,7 +1,7 @@
 #include <ctime>
 #include <cstring>
 
-#include "../../inc/entities/Transaction.hpp"
+#include "../../inc/entities/Transaction.h"
 
 Transaction::Transaction(TransactionType type, double amount, double balanceAfterTransaction) 
     : type(type), timestamp(generateTimestamp()), amount(amount), balanceAfterTransaction(balanceAfterTransaction) {
@@ -25,7 +25,7 @@ double Transaction::getBalanceAfterTransaction() const {
 
 std::string Transaction::generateTimestamp() {
     std::time_t now = std::time(nullptr);
-    char buf[20];
+    char buf[32]; 
     std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
-    return buf;
+    return std::string(buf);
 }

@@ -7,9 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(GTest REQUIRED)
 find_package(Threads REQUIRED)
 
-
-include_directories(inc)
-
 set(MAIN_SOURCES
     src/main.cpp
     src/entities/User.cpp
@@ -30,16 +27,19 @@ set(MAIN_SOURCES
 )
 
 set(TEST_SOURCES
-    tests/test_User.cpp
-    tests/test_Account.cpp
-    tests/test_Transaction.cpp
-    tests/test_TransactionLedger.cpp
-    tests/test_UserRegistry.cpp
-    tests/test_AccountRegistry.cpp
+    tests/UserGTest.cpp
+    tests/AccountGTest.cpp
+    tests/TransactionGTest.cpp
+    tests/TransactionLedgerGTest.cpp
+    tests/UserRegistryGTest.cpp
+    tests/AccountRegistryGTest.cpp
 )
 
+# Main executable
 add_executable(banking_system ${MAIN_SOURCES})
+target_include_directories(banking_system PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
+# Test executable
 add_executable(banking_tests ${TEST_SOURCES} 
     src/entities/User.cpp
     src/entities/Account.cpp
@@ -49,6 +49,8 @@ add_executable(banking_tests ${TEST_SOURCES}
     src/entities/AccountRegistry.cpp
     src/roles/AccountHolder.cpp
 )
+
+target_include_directories(banking_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 target_link_libraries(banking_tests 
     GTest::gtest 

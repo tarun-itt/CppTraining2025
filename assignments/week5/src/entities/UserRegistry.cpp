@@ -1,4 +1,4 @@
-#include "../../inc/entities/UserRegistry.hpp"
+#include "../../inc/entities/UserRegistry.h"
 
 UserRegistry::UserRegistry(int capacity)
     : size(0), capacity(capacity), data(new IUser*[capacity]) {}

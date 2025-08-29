@@ -1,4 +1,4 @@
-#include "../../inc/entities/Account.hpp"
+#include "../../inc/entities/Account.h"
 
 Account::Account(uint32_t accountNumber, uint32_t accountHolderId, double depositAmount): accountNumber(accountNumber), accountHolderId(accountHolderId), transactions(TransactionLedger()) {
     addTransaction(TransactionType::DEPOSIT, depositAmount);

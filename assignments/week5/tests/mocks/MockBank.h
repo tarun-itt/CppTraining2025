@@ -2,7 +2,9 @@
 #define MOCKBANK_HPP
 
 #include <gmock/gmock.h>
-#include "../../inc/interfaces/IBank.h"
+
+#include "interfaces/IBank.h"
+#include "entities/TransactionLedger.h"
 
 class MockBank : public IBank {
 public:

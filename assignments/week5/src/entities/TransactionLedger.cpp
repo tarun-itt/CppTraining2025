@@ -1,4 +1,5 @@
-#include "../../inc/entities/TransactionLedger.hpp"
+#include "../../inc/entities/TransactionLedger.h"
+#include <iostream>
 
 TransactionLedger::TransactionLedger(int capacity)
     : size(0), capacity(capacity), data(new Transaction*[capacity]) {}
@@ -38,11 +39,12 @@ TransactionLedger& TransactionLedger::operator=(const TransactionLedger& other) 
 
 TransactionLedger::~TransactionLedger() {
     for (int transactionIndex = 0; transactionIndex < size; transactionIndex++) {
-        delete data[transactionIndex];
+        if (data[transactionIndex] != nullptr) {
+            delete data[transactionIndex];
+        }
     }
     delete[] data;
 }
-
 void TransactionLedger::resize(int newCapacity) {
     Transaction** newData = new Transaction*[newCapacity];
 
@@ -55,12 +57,16 @@ void TransactionLedger::resize(int newCapacity) {
     capacity = newCapacity;
 }
 
-void TransactionLedger::add(Transaction* t) {
+void TransactionLedger::add(Transaction* transaction) {
+    if (transaction == nullptr) {
+        return; 
+    }
+
     if (size == capacity) {
         resize(capacity * 2);
     }
 
-    data[size++] = t;
+    data[size++] = transaction;
 }
 
 Transaction* TransactionLedger::operator[](int index) const {

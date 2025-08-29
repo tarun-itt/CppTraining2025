@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <string>
 
-#include "../entities/User.hpp"
-#include "../entities/UserDatabaseManager.hpp"
+#include "../entities/User.h"
+#include "../entities/UserDatabaseManager.h"
 #include "../interfaces/IUser.h"
 #include "../interfaces/IAdmin.h"
 

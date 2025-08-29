@@ -1,7 +1,7 @@
 #include <iostream>
 #include <limits>
 
-#include "../../inc/UI/LoginMenu.hpp"
+#include "../../inc/UI/LoginMenu.h"
 
 LoginMenu::LoginMenu(AuthController& authController): authController(authController) {}
 

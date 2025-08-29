@@ -2,7 +2,7 @@
 #define IACCOUNTREGISTRY_H
 
 #include <cstdint>
-#include "../entities/Account.hpp"
+#include "../entities/Account.h"
 
 class IAccountRegistry {
 public:
