@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <iostream>
 #include <vector>
 #include <limits>
@@ -83,7 +84,7 @@ void Application::deletePlaylist() {
     }
     int choice;
     std::cout << "Select a playlist to delete: ";
-    if(std::cin >> choice && choice > 0 && choice <= static_cast<int>(playlists.size())) {
+    if(std::cin >> choice && choice > 0 && static_cast<size_t>(choice) <= playlists.size()) {
         playlistManager.deletePlaylist(playlists[choice - 1]);
         std::cout << "Playlist '" << playlists[choice - 1] << "' deleted!\n";
     }
@@ -106,7 +107,7 @@ void Application::switchPlaylist() {
         int choice;
         std::cout << "Select a playlist: ";
         
-        if(std::cin >> choice && choice > 0 && choice <= static_cast<int>(playlists.size())) {
+        if(std::cin >> choice && choice > 0 && static_cast<size_t>(choice) <= playlists.size()) {
             playlistManager.setActivePlaylist(playlists[choice - 1]);
             if(playlistManager.getActivePlaylist() == nullptr){
                 std::cout << "Playlist does not exist.\n";
@@ -215,7 +216,7 @@ void Application::addSongToPlaylist() {
         int choice;
         std::cout << "Select a song to add: ";
         
-        if (std::cin >> choice && choice > 0 && choice <= static_cast<int>(allSongs.size())) {
+        if (std::cin >> choice && choice > 0 && static_cast<size_t>(choice) <= allSongs.size()) {
             playlist->addSong(allSongs[choice - 1].id);
             std::cout << "Song added to playlist.\n";
         } else {
@@ -243,7 +244,7 @@ void Application::removeSongFromPlaylist() {
         int choice;
         std::cout << "Select a song to remove: ";
         
-        if (std::cin >> choice && choice > 0 && choice <= static_cast<int>(songs.size())) {
+        if (std::cin >> choice && choice > 0 &&  static_cast<size_t>(choice) <=songs.size()) {
             musicPlayer.stop();
             playlist->removeSong(choice - 1);
             musicPlayer.play();
@@ -273,7 +274,7 @@ void Application::moveSongInPlaylist(enum MoveSong direction) {
         int choice;
         std::cout << "Select a song to move " << (direction == MoveSong::UP ? "up" : "down") << ": ";
         
-        if (std::cin >> choice && choice > 0 && choice <= static_cast<int>(songs.size())) {
+        if (std::cin >> choice && choice > 0 &&  static_cast<size_t>(choice) <= songs.size()) {
             if (direction == MoveSong::UP) {
                 playlist->moveUp(choice - 1);
             } else {
@@ -337,7 +338,7 @@ void Application::selectSongToPlay() {
     int choice;
     std::cout << "Select a song to play: ";
     
-    if (std::cin >> choice && choice > 0 && choice <= static_cast<int>(songs.size())) {
+    if (std::cin >> choice && choice > 0 && static_cast<int>(choice) <= songs.size()) {
         playlist->setCurrentIndex(choice - 1);
         musicPlayer.setPlaylist(playlist);
         musicPlayer.play();
