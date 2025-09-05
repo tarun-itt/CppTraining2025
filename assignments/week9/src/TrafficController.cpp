@@ -34,11 +34,6 @@ void TrafficController::run() {
             }
         }
         
-        if (nextLane == -1) {
-            simulationRunning = false;
-            break;
-        }
-        
         {
             std::lock_guard<std::mutex> lock(controllerMutex);
             currentActiveLane = nextLane;
@@ -57,11 +52,8 @@ void TrafficController::run() {
         
         {
             std::lock_guard<std::mutex> lock(controllerMutex);
+            currentActiveLane = -1;
         }
-    }
-    
-    {
-        std::lock_guard<std::mutex> lock(controllerMutex);
     }
     laneCondition.notify_all();
 
@@ -78,13 +70,15 @@ void TrafficController::laneWorker(int laneIndex) {
         laneCondition.wait(lock, [this, laneIndex]() {
             return !simulationRunning || currentActiveLane == laneIndex;
         });
+
+        lock.unlock();
         
         while (simulationRunning) {
             if (currentActiveLane != laneIndex || !lanes[laneIndex]->hasCars()) {
                 break;
             }
             
-            lock.unlock();
+   
             
             if (lanes[laneIndex]->processCar()) {
                 
@@ -95,10 +89,9 @@ void TrafficController::laneWorker(int laneIndex) {
                 currentTime++;
             }
             
-            timer.sleep(CAR_PASS_DURATION);
-            
-            lock.lock();
+            //timer.sleep(CAR_PASS_DURATION);
         }
+        lock.lock();
     }
 }
 
