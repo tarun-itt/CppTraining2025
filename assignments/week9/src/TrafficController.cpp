@@ -1,12 +1,24 @@
+#include <condition_variable>
 #include <iostream>
+#include <fstream>
+
 #include "TrafficController.h"
 
+#ifdef DEV
+    std::ofstream logger("debug.log", std::ios::out | std::ios::trunc);
+    #define LOG(msg) logger<<msg<<std::endl;
+#else
+    #define LOG(msg) std::cout << msg << std::endl; 
+#endif
+
 TrafficController::TrafficController(std::vector<ILane*>& lanes, ITimer& timer, int greenLightDuration)
-    : lanes(lanes), timer(timer), greenLightDuration(greenLightDuration), 
+    : lanes(lanes), timer(timer), greenLightDuration(greenLightDuration),
       currentTime(0), simulationRunning(false), currentActiveLane(-1) {
 }
 
 TrafficController::~TrafficController() {
+    simulationRunning = false;
+    laneCondition.notify_all();
 }
 
 void TrafficController::run() {
@@ -37,26 +49,13 @@ void TrafficController::run() {
         {
             std::lock_guard<std::mutex> lock(controllerMutex);
             currentActiveLane = nextLane;
+            greenTimeLeft = greenLightDuration;
         }
         laneCondition.notify_all();
-        
-        for (int iteration = 0; iteration < greenLightDuration; ++iteration) {
-            if (!simulationRunning) break;
-            
-            if (!lanes[nextLane]->hasCars()) {
-                break;
-            }
-            
-            timer.sleep(CAR_PASS_DURATION);
-        }
-        
-        {
-            std::lock_guard<std::mutex> lock(controllerMutex);
-            currentActiveLane = -1;
-        }
     }
+    
     laneCondition.notify_all();
-
+    
     for (auto& worker : laneWorkers) {
         if (worker.joinable()) {
             worker.join();
@@ -67,37 +66,41 @@ void TrafficController::run() {
 void TrafficController::laneWorker(int laneIndex) {
     while (simulationRunning) {
         std::unique_lock<std::mutex> lock(controllerMutex);
+
         laneCondition.wait(lock, [this, laneIndex]() {
             return !simulationRunning || currentActiveLane == laneIndex;
         });
-
-        lock.unlock();
         
-        while (simulationRunning) {
-            if (currentActiveLane != laneIndex || !lanes[laneIndex]->hasCars()) {
+        while (currentActiveLane == laneIndex && greenTimeLeft > 0) {
+            if (!lanes[laneIndex]->hasCars()) {
                 break;
             }
             
-   
-            
             if (lanes[laneIndex]->processCar()) {
-                
                 int currentCarNumber = lanes[laneIndex]->getInitialCarCount() - lanes[laneIndex]->getRemainingCarCount();
-                int remainingTime = greenLightDuration - ((currentCarNumber-1) % greenLightDuration);
                 std::string carName = static_cast<char>('A' + laneIndex) + std::to_string(currentCarNumber);
-                printStatus(currentTime+1, laneIndex, remainingTime, carName);
+                
                 currentTime++;
+                int remainingTime = greenTimeLeft;
+                
+                printStatus(currentTime, laneIndex, remainingTime, carName);
+                --greenTimeLeft;
+                
+                if (greenTimeLeft <= 0) {
+                    timer.sleep(CAR_PASS_DURATION);
+                    break;
+                }
             }
             
-            //timer.sleep(CAR_PASS_DURATION);
+            timer.sleep(CAR_PASS_DURATION);
         }
-        lock.lock();
     }
 }
 
 void TrafficController::printStatus(int time, int laneIndex, int remainingTime, const std::string& carName) {
-    std::lock_guard<std::mutex> lock(controllerMutex);
-    std::cout << "Time " << time << ": lane " << static_cast<char>('A' + laneIndex) << " (green time remaining " << remainingTime << "s), car " << carName << " passed" << std::endl;
+    std::string status = "Time " + std::to_string(time) + ": lane " + static_cast<char>('A' + laneIndex) + " (green time remaining " + std::to_string(remainingTime) + "s), car " + carName + " passed";
+    
+    LOG(status);
 }
 
 bool TrafficController::hasCarsInAnyLane() {
