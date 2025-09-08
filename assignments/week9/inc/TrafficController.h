@@ -30,6 +30,7 @@ private:
     int currentTime;
     bool simulationRunning;
     int currentActiveLane;
+    int greenTimeLeft;
     
     std::mutex controllerMutex;
     std::condition_variable laneCondition;
