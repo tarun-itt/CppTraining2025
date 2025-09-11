@@ -38,19 +38,20 @@ void TrafficController::run() {
         
         int nextLane = -1;
         int maxRemainingCars = 0;
-        for (size_t currentLane = 0; currentLane < lanes.size(); ++currentLane) {
-            int remainingCars = lanes[currentLane]->getRemainingCarCount();
-            if (remainingCars > maxRemainingCars) {
-                maxRemainingCars = remainingCars;
-                nextLane = currentLane;
+        if(controllerMutex.try_lock()){
+            for (size_t currentLane = 0; currentLane < lanes.size(); ++currentLane) {
+                int remainingCars = lanes[currentLane]->getRemainingCarCount();
+                if (remainingCars > maxRemainingCars) {
+                    maxRemainingCars = remainingCars;
+                    nextLane = currentLane;
+                }
             }
-        }
-        
-        {
-            std::lock_guard<std::mutex> lock(controllerMutex);
             currentActiveLane = nextLane;
             greenTimeLeft = greenLightDuration;
+        }else {
+            continue;
         }
+        controllerMutex.unlock();
         laneCondition.notify_all();
     }
     

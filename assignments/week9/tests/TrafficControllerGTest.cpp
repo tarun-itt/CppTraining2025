@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <vector>
+#include <thread>
 #include "../inc/TrafficController.h"
 #include "mocks/mockLane.h"
 #include "mocks/mockTimer.h"
@@ -86,8 +87,55 @@ TEST_F(GivenTestingTrafficController, WhenRunCalledWithCars_ThenLanesProcessCars
     ON_CALL(*mockLaneB, getRemainingCarCount()).WillByDefault(Return(zeroCars));
     
     EXPECT_CALL(*mockTimer, sleep(sleepDurationOne)).Times(AtLeast(1));
+    for (auto* lane : lanes) {
+        auto* mockLane = dynamic_cast<MockLane*>(lane);
+        if(mockLane->hasCars()) {
+            EXPECT_CALL(*mockLane, processCar()).Times(AtLeast(1));
+        }
+    }   
+    
     
     trafficController = new TrafficController(lanes, *mockTimer, firstGreenLightDuration);
     trafficController->run();
 }
 
+TEST_F(GivenTestingTrafficController, WhenMultipleLanesHaveCars_ThenOnlyActiveLaneProcesses) {
+    int initialCarsA = 2;
+    int remainingCarsA = initialCarsA;
+    int initialCarsB = 1;
+    int remainingCarsB = initialCarsB;
+    
+    ON_CALL(*mockLaneA, hasCars()).WillByDefault([&remainingCarsA]() { return remainingCarsA > 0; });
+    ON_CALL(*mockLaneA, getRemainingCarCount()).WillByDefault([&remainingCarsA]() { return remainingCarsA; });
+    ON_CALL(*mockLaneA, processCar()).WillByDefault([&remainingCarsA]() { 
+        if (remainingCarsA > 0) {
+            remainingCarsA--;
+            return true;
+        }
+        return false;
+    });
+    ON_CALL(*mockLaneA, getInitialCarCount()).WillByDefault(Return(initialCarsA));
+    
+    ON_CALL(*mockLaneB, hasCars()).WillByDefault([&remainingCarsB]() { return remainingCarsB > 0; });
+    ON_CALL(*mockLaneB, getRemainingCarCount()).WillByDefault([&remainingCarsB]() { return remainingCarsB; });
+    ON_CALL(*mockLaneB, processCar()).WillByDefault([&remainingCarsB]() { 
+        if (remainingCarsB > 0) {
+            remainingCarsB--;
+            return true;
+        }
+        return false;
+    });
+    ON_CALL(*mockLaneB, getInitialCarCount()).WillByDefault(Return(initialCarsB));
+    
+    EXPECT_CALL(*mockTimer, sleep(sleepDurationOne)).Times(AtLeast(1));
+    EXPECT_CALL(*mockLaneA, processCar()).Times(AtLeast(1));
+    EXPECT_CALL(*mockLaneB, processCar()).Times(AtLeast(1));
+    
+    trafficController = new TrafficController(lanes, *mockTimer, firstGreenLightDuration);
+    
+    std::thread controllerThread([this]() {
+        trafficController->run();
+    });
+    
+    controllerThread.join();
+}
