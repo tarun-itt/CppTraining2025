@@ -3,8 +3,8 @@
 #include <thread>
 #include <chrono>
 
-#include "ElevatorSystem.h"
-#include "ElevatorSystemConfig.h"
+#include "Core/ElevatorSystem.h"
+#include "Core/ElevatorSystemConfig.h"
 
 int getInput(const std::string& prompt) {
     int value;
@@ -27,25 +27,23 @@ int main() {
     try {
         ElevatorSystemConfig config;
 
-        config.numberOfFloors = getInput("Enter the number of floors: ");
-        config.numberOfBasements = getInput("Enter the number of basements: ");
-        config.numberOfElevators = getInput("Enter the number of elevators: ");
-
-        if (!config.isValid()) {
-            std::cerr << "Configuration Error: Values must be positive. Exiting." << std::endl;
-            return 1;
-        }
+        do{
+            config.numberOfFloors = getInput("Enter the number of floors: ");
+            config.numberOfBasements = getInput("Enter the number of basements: ");
+            config.numberOfElevators = getInput("Enter the number of elevators: ");  
+            
+            std::cout << "Enter the input file name: ";
+            std::getline(std::cin, config.inputFilePath);
+            
+        } while (!config.isValid());
 
         ElevatorSystem system(config);
 
         system.start();
-
-        while (system.isRunning()) {
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        }
+        system.waitForShutdown();
 
     } catch (const std::exception& e) {
-        std::cerr << "FATAL ERROR: An unhandled exception occurred: " << e.what() << std::endl;
+        std::cerr << "An exception occurred while starting the elevator system: " << e.what() << std::endl;
         return 1;
     }
 

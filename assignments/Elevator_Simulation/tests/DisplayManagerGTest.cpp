@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "../inc/DisplayManager.h"
-#include "../inc/Printable.h"
+#include "../inc/Display/IPrintable.h"
 #include "mocks/MockBlockingQueue.h"
 
 using ::testing::_;
