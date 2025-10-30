@@ -10,7 +10,7 @@ class EchoCommand : public ICommand {
     CommandResult execute(const std::vector<std::string> &args, FileSystemManager &fs) override;
     std::string getName() const override { return "echo"; }
     std::string getDescription() const override { return "Display arguments"; }
-    std::string getUsage() const override { return "echo <text>"; }
+    std::string getUsage() const override { return "echo <text> >> <filename>"; }
 
   private:
     IOutputHandler &output;

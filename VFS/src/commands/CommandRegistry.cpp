@@ -39,23 +39,6 @@ CommandResult CommandRegistry::executeCommand(const std::string &commandLine, Fi
     return command->execute(args, fs);
 }
 
-std::vector<std::string> CommandRegistry::getAvailableCommands() const {
-    std::vector<std::string> commands;
-    for (const auto &pair : commandDescriptions) {
-        commands.push_back(pair.first);
-    }
-    std::sort(commands.begin(), commands.end());
-    return commands;
-}
-
-std::string CommandRegistry::getCommandHelp(const std::string &commandName) const {
-    auto it = commandDescriptions.find(commandName);
-    if (it != commandDescriptions.end()) {
-        return it->second;
-    }
-    return "Unknown command";
-}
-
 std::vector<std::string> CommandRegistry::parseCommandLine(const std::string &commandLine) const {
     std::vector<std::string> tokens;
     std::istringstream stream(commandLine);

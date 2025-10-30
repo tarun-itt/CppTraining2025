@@ -64,7 +64,7 @@ TEST_F(GivenTestingDirectory, WhenHasChildNonExistent_ThenReturnsFalse) {
 TEST_F(GivenTestingDirectory, WhenGetChildren_ThenReturnsAllChildren) {
     dir->addChild(file1);
     dir->addChild(file2);
-    dir->addChild(std::static_pointer_cast<FileSystemObject>(subDir));
+    dir->addChild(std::static_pointer_cast<FileSystemNode>(subDir));
 
     const auto &children = dir->getChildren();
 
@@ -111,7 +111,7 @@ TEST_F(GivenTestingDirectory, WhenFindByNameRecursive_ThenFindsInNestedDirectory
     auto deepFile = std::make_shared<File>("target.txt", "Found me");
     subDir->addChild(deepFile);
     dir->addChild(file1);
-    dir->addChild(std::static_pointer_cast<FileSystemObject>(subDir));
+    dir->addChild(std::static_pointer_cast<FileSystemNode>(subDir));
 
     auto results = dir->findByName("target.txt");
 
@@ -155,7 +155,7 @@ TEST_F(GivenTestingDirectory, WhenFindByTimestamp_ThenFindsRecentFiles) {
 TEST_F(GivenTestingDirectory, WhenNestedDirectoryHasFiles_ThenSizeIsCalculatedCorrectly) {
     subDir->addChild(file1);
     dir->addChild(file2);
-    dir->addChild(std::static_pointer_cast<FileSystemObject>(subDir));
+    dir->addChild(std::static_pointer_cast<FileSystemNode>(subDir));
 
     size_t expectedSize = file1->getSize() + file2->getSize();
     EXPECT_EQ(dir->getSize(), expectedSize);

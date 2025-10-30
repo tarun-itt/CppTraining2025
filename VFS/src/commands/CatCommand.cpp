@@ -7,7 +7,7 @@ CatCommand::CatCommand(IOutputHandler &output) : output(output) {}
 
 CommandResult CatCommand::execute(const std::vector<std::string> &args, FileSystemManager &fs) {
     if (args.empty()) {
-        return CommandResult(CommandResultStatus::InvalidArguments, "Usage: cat <filename>");
+        return CommandResult(CommandResultStatus::InvalidArguments, "Usage: " + getUsage());
     }
 
     const std::string &fileName = args[0];
@@ -17,6 +17,6 @@ CommandResult CatCommand::execute(const std::vector<std::string> &args, FileSyst
         return CommandResult(CommandResultStatus::Failure, "File not found: " + fileName);
     }
 
-    output.write(content);
+    output.write(content+"\n");
     return CommandResult(CommandResultStatus::Success);
 }

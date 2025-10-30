@@ -13,10 +13,10 @@ int main() {
         auto output = std::make_shared<ConsoleOutputHandler>();
         auto input = std::make_shared<ConsoleInputHandler>();
 
-        auto persistence =
+        auto fileSystemState =
             std::unique_ptr<FilePersistenceStrategy>(new FilePersistenceStrategy("vfs_data.bin", *output));
 
-        FileSystemManager fs(std::move(persistence));
+        FileSystemManager fs(std::move(fileSystemState));
 
         CommandFactory factory(*output);
         CommandRegistry registry(factory, *output);
@@ -24,9 +24,10 @@ int main() {
 
         factory.setCommandDescriptions(registry.getCommandDescriptions());
 
-        while (input->hasInput()) {
-            std::string prompt = fs.getCurrentPath() + " $ ";
-            std::string line = input->readLine(prompt);
+        while (input->canReadInput()) {
+            output->write(fs.getCurrentPath() + " $ "); //need to make it a  variable and store in root node so can display username as well
+
+            std::string line = input->readLine();
 
             if (line.empty())
                 continue;

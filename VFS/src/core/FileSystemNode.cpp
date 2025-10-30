@@ -1,6 +1,6 @@
 #include <ctime>
 
-#include "FileSystemObject.h"
+#include "FileSystemNode.h"
 
-FileSystemObject::FileSystemObject(const std::string &name)
+FileSystemNode::FileSystemNode(const std::string &name)
     : name(name), creationTime(std::time(nullptr)), modificationTime(std::time(nullptr)) {}

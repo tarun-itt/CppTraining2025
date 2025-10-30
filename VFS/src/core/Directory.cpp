@@ -3,9 +3,9 @@
 
 #include "Directory.h"
 #include "File.h"
-#include "FileSystemObject.h"
+#include "FileSystemNode.h"
 
-Directory::Directory(const std::string &name) : FileSystemObject(name) {}
+Directory::Directory(const std::string &name) : FileSystemNode(name) {}
 
 size_t Directory::getSize() const {
     size_t totalSize = 0;
@@ -15,7 +15,7 @@ size_t Directory::getSize() const {
     return totalSize;
 }
 
-void Directory::addChild(std::shared_ptr<FileSystemObject> child) {
+void Directory::addChild(std::shared_ptr<FileSystemNode> child) {
     if (!child || hasChild(child->getName())) {
         return;
     }
@@ -26,21 +26,21 @@ void Directory::addChild(std::shared_ptr<FileSystemObject> child) {
 }
 
 bool Directory::removeChild(const std::string &name) {
-    auto it = childIndex.find(name);
-    if (it == childIndex.end()) {
+    auto searchedChildNode = childIndex.find(name);
+    if (searchedChildNode == childIndex.end()) {
         return false;
     }
 
-    children.erase(children.begin() + it->second);
+    children.erase(children.begin() + searchedChildNode->second);
     rebuildIndex();
     updateModificationTime();
     return true;
 }
 
-std::shared_ptr<FileSystemObject> Directory::getChild(const std::string &name) const {
-    auto it = childIndex.find(name);
-    if (it != childIndex.end() && it->second < children.size()) {
-        return children[it->second];
+std::shared_ptr<FileSystemNode> Directory::getChild(const std::string &name) const {
+    auto searchedChildNode = childIndex.find(name);
+    if (searchedChildNode != childIndex.end() && searchedChildNode->second < children.size()) {
+        return children[searchedChildNode->second];
     }
     return nullptr;
 }
@@ -49,8 +49,8 @@ bool Directory::hasChild(const std::string &name) const {
     return childIndex.find(name) != childIndex.end();
 }
 
-std::vector<std::shared_ptr<FileSystemObject>> Directory::findByName(const std::string &name) const {
-    std::vector<std::shared_ptr<FileSystemObject>> result;
+std::vector<std::shared_ptr<FileSystemNode>> Directory::findByName(const std::string &name) const {
+    std::vector<std::shared_ptr<FileSystemNode>> result;
 
     for (const auto &child : children) {
         if (child->getName() == name) {
@@ -68,8 +68,8 @@ std::vector<std::shared_ptr<FileSystemObject>> Directory::findByName(const std::
     return result;
 }
 
-std::vector<std::shared_ptr<FileSystemObject>> Directory::findBySize(size_t minSize, size_t maxSize) const {
-    std::vector<std::shared_ptr<FileSystemObject>> result;
+std::vector<std::shared_ptr<FileSystemNode>> Directory::findBySize(size_t minSize, size_t maxSize) const {
+    std::vector<std::shared_ptr<FileSystemNode>> result;
 
     for (const auto &child : children) {
         size_t size = child->getSize();
@@ -88,8 +88,8 @@ std::vector<std::shared_ptr<FileSystemObject>> Directory::findBySize(size_t minS
     return result;
 }
 
-std::vector<std::shared_ptr<FileSystemObject>> Directory::findByTimestamp(time_t start, time_t end) const {
-    std::vector<std::shared_ptr<FileSystemObject>> result;
+std::vector<std::shared_ptr<FileSystemNode>> Directory::findByTimestamp(time_t start, time_t end) const {
+    std::vector<std::shared_ptr<FileSystemNode>> result;
 
     for (const auto &child : children) {
         time_t modTime = child->getModificationTime();
@@ -100,8 +100,8 @@ std::vector<std::shared_ptr<FileSystemObject>> Directory::findByTimestamp(time_t
         if (child->isDirectory()) {
             auto childDir = std::dynamic_pointer_cast<Directory>(child);
             if (childDir) {
-                auto childResults = childDir->findByTimestamp(start, end);
-                result.insert(result.end(), childResults.begin(), childResults.end());
+                auto resultFromChild = childDir->findByTimestamp(start, end);
+                result.insert(result.end(), resultFromChild.begin(), resultFromChild.end());
             }
         }
     }

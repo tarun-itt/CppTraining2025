@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "FileSystemObject.h"
+#include "FileSystemNode.h"
 #include "ICommand.h"
 #include "IOutputHandler.h"
 

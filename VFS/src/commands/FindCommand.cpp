@@ -10,7 +10,7 @@ CommandResult FindCommand::execute(const std::vector<std::string> &args, FileSys
             "Usage: find <pattern> | find -name <pattern> | find -size <min>:<max> | find -time <start>:<end>");
     }
 
-    std::vector<std::shared_ptr<FileSystemObject>> results;
+    std::vector<std::shared_ptr<FileSystemNode>> results;
 
     try {
         if (args[0] == "-name") {

@@ -8,8 +8,8 @@ class ConsoleInputHandler : public IInputHandler {
   public:
     ConsoleInputHandler();
 
-    std::string readLine(const std::string &prompt = "") override;
-    bool hasInput() const override;
+    std::string readLine() override;
+    bool canReadInput() const override;
     void setEndOfInput() override;
 
   private:

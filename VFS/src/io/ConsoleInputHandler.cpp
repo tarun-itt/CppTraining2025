@@ -4,14 +4,9 @@
 
 ConsoleInputHandler::ConsoleInputHandler() : endOfInput(false) {}
 
-std::string ConsoleInputHandler::readLine(const std::string &prompt) {
+std::string ConsoleInputHandler::readLine() {
     if (endOfInput)
         return "";
-
-    if (!prompt.empty()) {
-        std::cout << prompt;
-        std::cout.flush();
-    }
 
     std::string line;
     if (!std::getline(std::cin, line)) {
@@ -22,7 +17,7 @@ std::string ConsoleInputHandler::readLine(const std::string &prompt) {
     return line;
 }
 
-bool ConsoleInputHandler::hasInput() const {
+bool ConsoleInputHandler::canReadInput() const {
     return !endOfInput;
 }
 

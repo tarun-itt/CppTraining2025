@@ -41,19 +41,6 @@ TEST_F(GivenTestingFile, WhenAppendContent_ThenContentIsAdded) {
     EXPECT_EQ(contentFile->getSize(), 21);
 }
 
-TEST_F(GivenTestingFile, WhenFileCloned_ThenCreatesIndependentCopy) {
-    auto cloned = contentFile->clone();
-    auto clonedFile = std::dynamic_pointer_cast<File>(cloned);
-    
-    ASSERT_NE(clonedFile, nullptr);
-    EXPECT_EQ(clonedFile->getName(), "content.txt");
-    EXPECT_EQ(clonedFile->getContent(), "Hello World");
-    
-    contentFile->setContent("Modified");
-    
-    EXPECT_EQ(clonedFile->getContent(), "Hello World");
-}
-
 TEST_F(GivenTestingFile, WhenSearchLines_ThenFindsMatchingLines) {
     auto multiLineFile = std::make_shared<File>("test.txt", "Line 1: Hello\nLine 2: World\nLine 3: Hello Again");
     

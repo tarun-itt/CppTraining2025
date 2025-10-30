@@ -156,7 +156,7 @@ bool FileSystemManager::exists(const std::string &path) const {
     return navigateToPath(path) != nullptr;
 }
 
-std::shared_ptr<FileSystemObject> FileSystemManager::getObject(const std::string &path) const {
+std::shared_ptr<FileSystemNode> FileSystemManager::getObject(const std::string &path) const {
     return navigateToPath(path);
 }
 
@@ -182,7 +182,7 @@ std::string FileSystemManager::getCurrentPath() const {
     return "/" + joinPath(currentPath);
 }
 
-std::vector<std::shared_ptr<FileSystemObject>> FileSystemManager::listCurrentDirectory() const {
+std::vector<std::shared_ptr<FileSystemNode>> FileSystemManager::listCurrentDirectory() const {
     return currentDirectory->getChildren();
 }
 
@@ -209,20 +209,20 @@ bool FileSystemManager::appendToFile(const std::string &path, const std::string 
     return false;
 }
 
-std::vector<std::shared_ptr<FileSystemObject>> FileSystemManager::findByName(const std::string &name) const {
+std::vector<std::shared_ptr<FileSystemNode>> FileSystemManager::findByName(const std::string &name) const {
     return root->findByName(name);
 }
 
-std::vector<std::shared_ptr<FileSystemObject>> FileSystemManager::findBySize(size_t minSize, size_t maxSize) const {
+std::vector<std::shared_ptr<FileSystemNode>> FileSystemManager::findBySize(size_t minSize, size_t maxSize) const {
     return root->findBySize(minSize, maxSize);
 }
 
-std::vector<std::shared_ptr<FileSystemObject>> FileSystemManager::findByTimestamp(time_t start, time_t end) const {
+std::vector<std::shared_ptr<FileSystemNode>> FileSystemManager::findByTimestamp(time_t start, time_t end) const {
     return root->findByTimestamp(start, end);
 }
 
-std::vector<std::shared_ptr<FileSystemObject>> FileSystemManager::findByContent(const std::string &pattern) const {
-    std::vector<std::shared_ptr<FileSystemObject>> results;
+std::vector<std::shared_ptr<FileSystemNode>> FileSystemManager::findByContent(const std::string &pattern) const {
+    std::vector<std::shared_ptr<FileSystemNode>> results;
     collectContentSearchableObjects(root, results, pattern);
     return results;
 }
@@ -243,12 +243,12 @@ std::vector<std::string> FileSystemManager::searchLines(const std::string &patte
     return allLines;
 }
 
-std::shared_ptr<FileSystemObject> FileSystemManager::navigateToPath(const std::string &path) const {
+std::shared_ptr<FileSystemNode> FileSystemManager::navigateToPath(const std::string &path) const {
     if (path.empty() || path == "/")
         return root;
 
     auto pathComponents = splitPath(path);
-    std::shared_ptr<FileSystemObject> current = isAbsolutePath(path) ? root : currentDirectory;
+    std::shared_ptr<FileSystemNode> current = isAbsolutePath(path) ? root : currentDirectory;
 
     for (const auto &component : pathComponents) {
         if (!current || !current->isDirectory())
@@ -291,17 +291,17 @@ bool FileSystemManager::isAbsolutePath(const std::string &path) const {
     return !path.empty() && path[0] == '/';
 }
 
-void FileSystemManager::collectContentSearchableObjects(const std::shared_ptr<FileSystemObject> &obj,
-                                                        std::vector<std::shared_ptr<FileSystemObject>> &results,
+void FileSystemManager::collectContentSearchableObjects(const std::shared_ptr<FileSystemNode> &node,
+                                                        std::vector<std::shared_ptr<FileSystemNode>> &results,
                                                         const std::string &pattern) const {
-    if (obj->isFile()) {
-        auto file = std::dynamic_pointer_cast<File>(obj);
+    if (node->isFile()) {
+        auto file = std::dynamic_pointer_cast<File>(node);
         if (file) {
             auto fileResults = file->findByContent(pattern);
             results.insert(results.end(), fileResults.begin(), fileResults.end());
         }
-    } else if (obj->isDirectory()) {
-        auto dir = std::dynamic_pointer_cast<Directory>(obj);
+    } else if (node->isDirectory()) {
+        auto dir = std::dynamic_pointer_cast<Directory>(node);
         if (dir) {
             for (const auto &child : dir->getChildren()) {
                 collectContentSearchableObjects(child, results, pattern);

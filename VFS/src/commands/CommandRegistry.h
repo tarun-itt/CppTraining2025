@@ -14,8 +14,6 @@ class CommandRegistry {
 
     void registerAllCommands();
     CommandResult executeCommand(const std::string &commandLine, FileSystemManager &fs);
-    std::vector<std::string> getAvailableCommands() const;
-    std::string getCommandHelp(const std::string &commandName) const;
     const std::unordered_map<std::string, std::string> &getCommandDescriptions() const { return commandDescriptions; }
 
   private:

@@ -5,9 +5,9 @@
 
 class SimpleMockPersistence : public IPersistenceStrategy {
   public:
-    void saveFileSystem(const std::shared_ptr<FileSystemObject> &root) override { saveCalled = true; }
+    void saveFileSystem(const std::shared_ptr<FileSystemNode> &root) override { saveCalled = true; }
 
-    std::shared_ptr<FileSystemObject> loadFileSystem() override { return nullptr; }
+    std::shared_ptr<FileSystemNode> loadFileSystem() override { return nullptr; }
 
     bool exists() const override { return false; }
 
