@@ -1,5 +1,5 @@
-#include "../inc/Application.h"
-#include "../inc/FileSystemPersistence.h"
+#include "Application.h"
+#include "FileSystemPersistence.h"
 
 Application::Application() : dataFilename("vfs_data.txt") { 
     initialize(); 
@@ -10,11 +10,11 @@ Application::Application(const std::string& dataFilename) : dataFilename(dataFil
 }
 
 void Application::initialize() {
-  auto persistenceImpl = createFilePersistence(dataFilename);
-  fileSystem = std::make_unique<FileSystem>(std::move(persistenceImpl));
+  auto persistedFileSystem = std::make_unique<FileSystemPersistence>(dataFilename);
+  fileSystem = std::make_unique<FileSystem>(std::move(persistedFileSystem));
 
   ioHandler = std::make_unique<IOHandler>();
-  parser = std::make_unique<CommandParser>();
+  commandParser = std::make_unique<CommandParser>();
   commandHandler = std::make_unique<CommandHandler>(*fileSystem, *ioHandler);
 
   fileSystem->initialize();
@@ -31,9 +31,8 @@ void Application::processCommands() {
 
   while (true) {
     ioHandler->showPrompt(fileSystem->getCurrentPath());
-    input = ioHandler->readLine();
-
-    if (input == "EOF_REACHED") {
+    
+    if (!ioHandler->readLine(input)) {
       fileSystem->saveFileSystem();
       break;
     }
@@ -47,7 +46,7 @@ void Application::processCommands() {
       continue;
     }
 
-    ParsedCommand parsedCmd = parser->parse(input);
+    ParsedCommand parsedCmd = commandParser->parse(input);
     commandHandler->execute(parsedCmd);
   }
 }

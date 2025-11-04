@@ -26,7 +26,6 @@ private:
     bool executeHelp(const std::vector<std::string> &args);
     bool executeLs(const std::vector<std::string> &args);
     bool executeMkdir(const std::vector<std::string> &args);
-    bool executePwd(const std::vector<std::string> &args);
     bool executeRm(const std::vector<std::string> &args);
     bool executeTouch(const std::vector<std::string> &args);
 

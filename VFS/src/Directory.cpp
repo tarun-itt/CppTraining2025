@@ -1,7 +1,7 @@
 #include <ctime>
 #include <algorithm>
 
-#include "../inc/Directory.h"
+#include "Directory.h"
 
 Directory::Directory(const std::string &name) : name(name) {
     creationTime = std::time(nullptr);
@@ -61,6 +61,34 @@ void Directory::setName(const std::string &name) {
 
 void Directory::updateModificationTime() {
     modificationTime = std::time(nullptr);
+}
+
+std::string Directory::getName() const {
+    return name;
+}
+
+std::time_t Directory::getCreationTime() const {
+    return creationTime;
+}
+
+std::time_t Directory::getModificationTime() const {
+    return modificationTime;
+}
+
+FileSystemComponentType Directory::getComponentType() const {
+    return FileSystemComponentType::Directory;
+}
+
+bool Directory::isFile() const {
+    return false;
+}
+
+bool Directory::isDirectory() const {
+    return true;
+}
+
+const std::vector<std::shared_ptr<FileSystemComponent>> &Directory::getChildren() const {
+    return children;
 }
 
 std::vector<std::shared_ptr<FileSystemComponent>> Directory::findByName(const std::string &name) const {

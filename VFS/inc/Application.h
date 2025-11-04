@@ -19,11 +19,10 @@ public:
 private:
     std::unique_ptr<FileSystem> fileSystem;
     std::unique_ptr<IOHandler> ioHandler;
-    std::unique_ptr<CommandParser> parser;
+    std::unique_ptr<CommandParser> commandParser;
     std::unique_ptr<CommandHandler> commandHandler;
     std::string dataFilename;
 
     void initialize();
     void processCommands();
-    void showWelcome() const;
 };

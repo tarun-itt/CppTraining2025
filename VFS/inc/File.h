@@ -11,16 +11,16 @@ class File : public FileSystemComponent {
 public:
     explicit File(const std::string &name, const std::string &content = "");
 
-    std::string getName() const override { return name; }
-    std::time_t getCreationTime() const override { return creationTime; }
-    std::time_t getModificationTime() const override { return modificationTime; }
-    std::size_t getSize() const override { return content.size(); }
-    FileSystemComponentType getComponentType() const override { return FileSystemComponentType::File; }
+    std::string getName() const override;
+    std::time_t getCreationTime() const override;
+    std::time_t getModificationTime() const override;
+    std::size_t getSize() const override;
+    FileSystemComponentType getComponentType() const override;
 
-    bool isFile() const override { return true; }
-    bool isDirectory() const override { return false; }
+    bool isFile() const override;
+    bool isDirectory() const override;
 
-    const std::string &getContent() const { return content; }
+    const std::string &getContent() const;
     void setContent(const std::string &content);
     void appendContent(const std::string &content);
 

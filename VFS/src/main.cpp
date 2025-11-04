@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../inc/Application.h"
+#include "Application.h"
 
 int main(int argc, char* argv[]) {
     std::string filename = "vfs_data.txt";

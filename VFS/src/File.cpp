@@ -1,7 +1,7 @@
 #include <ctime>
 #include <sstream>
 
-#include "../inc/File.h"
+#include "File.h"
 
 File::File(const std::string &name, const std::string &content) 
     : name(name), content(content) {
@@ -26,6 +26,38 @@ void File::setName(const std::string &name) {
 
 void File::updateModificationTime() {
     modificationTime = std::time(nullptr);
+}
+
+std::string File::getName() const {
+    return name;
+}
+
+std::time_t File::getCreationTime() const {
+    return creationTime;
+}
+
+std::time_t File::getModificationTime() const {
+    return modificationTime;
+}
+
+std::size_t File::getSize() const {
+    return content.size();
+}
+
+FileSystemComponentType File::getComponentType() const {
+    return FileSystemComponentType::File;
+}
+
+bool File::isFile() const {
+    return true;
+}
+
+bool File::isDirectory() const {
+    return false;
+}
+
+const std::string &File::getContent() const {
+    return content;
 }
 
 std::vector<std::shared_ptr<FileSystemComponent>> File::findByContent(const std::string &pattern) const {

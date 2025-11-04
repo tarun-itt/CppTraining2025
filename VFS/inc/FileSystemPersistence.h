@@ -1,18 +1,17 @@
 #pragma once
 
 #include <string>
-#include <memory>
 
 class FileSystem;
 
 class FileSystemPersistence {
 public:
-    virtual ~FileSystemPersistence() = default;
+    explicit FileSystemPersistence(const std::string &filename);
+    ~FileSystemPersistence() = default;
 
-    virtual void saveFileSystem(const FileSystem &fs) = 0;
-    virtual void loadFileSystem(FileSystem &fs) = 0;
-    virtual void serialize() = 0;
-    virtual void deserialize() = 0;
+    void saveFileSystem(const FileSystem &fs);
+    void loadFileSystem(FileSystem &fs);
+
+private:
+    std::string filename;
 };
-
-std::unique_ptr<FileSystemPersistence> createFilePersistence(const std::string &filename);

@@ -1,131 +1,111 @@
+#include <cstring>
 #include <fstream>
 #include <iostream>
-#include <cstring>
+#include <sstream>
 
-#include "../inc/FileSystemPersistence.h"
-#include "../inc/FileSystem.h"
-#include "../inc/Directory.h"
-#include "../inc/File.h"
+#include "Directory.h"
+#include "File.h"
+#include "FileSystem.h"
+#include "FileSystemPersistence.h"
 
 namespace {
-    constexpr const char* CURRENT_PATH_PREFIX = "CURRENT_PATH:";
-    constexpr const char* DIRECTORY_PREFIX = "DIR:";
-    constexpr const char* FILE_PREFIX = "FILE:";
-    constexpr const char* END_MARKER = "<<END_FILE>>";
+constexpr const char *DIRECTORY_PREFIX = "DIR:";
+constexpr const char *FILE_PREFIX = "FILE:";
+constexpr const char *CONTENT_PREFIX = "CONTENT:";
+constexpr const char *END_FILE_MARKER = "END_FILE";
+
+bool startsWith(const std::string &str, const std::string &prefix) {
+  return str.size() >= prefix.size() &&
+         str.compare(0, prefix.size(), prefix) == 0;
 }
 
-class FilePersistence : public FileSystemPersistence {
-private:
-    std::string filename;
+std::string extractAfterPrefix(const std::string &line,
+                               const std::string &prefix) {
+  return line.substr(prefix.size());
+}
 
-    void serializeDirectory(std::ofstream &file, const std::shared_ptr<Directory> &dir, const std::string &path) {
-        auto children = dir->getChildren();
-        for (const auto &child : children) {
-            std::string childPath = (path == "/") ? "/" + child->getName() : path + "/" + child->getName();
+std::string readFileContent(std::ifstream &in, size_t contentSize) {
+  std::string content(contentSize, '\0');
+  in.read(&content[0], contentSize);
 
-            if (child->isDirectory()) {
-                file << DIRECTORY_PREFIX << childPath << std::endl;
-                auto childDir = std::dynamic_pointer_cast<Directory>(child);
-                serializeDirectory(file, childDir, childPath);
-            } else {
-                auto filePtr = std::dynamic_pointer_cast<File>(child);
-                file << FILE_PREFIX << childPath << std::endl;
-                file << filePtr->getContent();
-                if (!filePtr->getContent().empty() && filePtr->getContent().back() != '\n') {
-                    file << std::endl;
-                }
-            }
-        }
+  std::string endMarker;
+  std::getline(in, endMarker);
+
+  return content;
+}
+
+void saveDirectory(std::ofstream &out,
+                   const std::shared_ptr<Directory> &dir,
+                   const std::string &path) {
+  auto children = dir->getChildren();
+
+  for (const auto &child : children) {
+    std::string childPath = (path == "/") ? "/" + child->getName()
+                                          : path + "/" + child->getName();
+
+    if (child->isDirectory()) {
+      out << DIRECTORY_PREFIX << childPath << '\n';
+      auto childDir = std::dynamic_pointer_cast<Directory>(child);
+      saveDirectory(out, childDir, childPath);
+    } else {
+      auto filePtr = std::dynamic_pointer_cast<File>(child);
+
+      out << FILE_PREFIX << childPath << '\n';
+      out << CONTENT_PREFIX << filePtr->getContent().size() << '\n';
+      out << filePtr->getContent();
+      out << END_FILE_MARKER << '\n';
     }
+  }
+}
+}
 
-public:
-    explicit FilePersistence(const std::string &filename) : filename(filename) {}
+FileSystemPersistence::FileSystemPersistence(const std::string &filename) 
+    : filename(filename) {}
 
-    void saveFileSystem(const FileSystem &fs) override {
-        std::ofstream file(filename);
-        if (!file.is_open()) {
-            std::cerr << "Warning: Could not save file system data" << std::endl;
-            return;
-        }
+void FileSystemPersistence::saveFileSystem(const FileSystem &fs) {
+  std::ofstream out(filename);
+  if (!out) {
+    std::cerr << "Error: Could not save file system to " << filename << '\n';
+    return;
+  }
 
-        file << CURRENT_PATH_PREFIX << fs.getCurrentPath() << std::endl;
+  if (auto rootDir = fs.getDirectory("/")) {
+    saveDirectory(out, rootDir, "/");
+  }
+}
 
-        auto rootDir = fs.getDirectory("/");
-        if (rootDir) {
-            serializeDirectory(file, rootDir, "/");
-        }
+void FileSystemPersistence::loadFileSystem(FileSystem &fs) {
+  std::ifstream in(filename);
+  if (!in) {
+    return;
+  }
 
-        file.close();
+  std::string line;
+  std::string currentPath = "/";
+
+  while (std::getline(in, line)) {
+    if (line.empty())
+      continue;
+
+    if (startsWith(line, DIRECTORY_PREFIX)) {
+      std::string dirPath = extractAfterPrefix(line, DIRECTORY_PREFIX);
+      fs.createDirectory(dirPath);
+    } else if (startsWith(line, FILE_PREFIX)) {
+      std::string filePath = extractAfterPrefix(line, FILE_PREFIX);
+
+      std::getline(in, line);
+      if (!startsWith(line, CONTENT_PREFIX))
+        continue;
+
+      size_t contentSize =
+          std::stoull(extractAfterPrefix(line, CONTENT_PREFIX));
+      std::string content = readFileContent(in, contentSize);
+
+      fs.createFile(filePath, content);
     }
+  }
 
-    void loadFileSystem(FileSystem &fs) override {
-        std::ifstream file(filename);
-        if (!file.is_open()) {
-            return;
-        }
-
-        std::string line;
-        std::string currentPath = "/";
-
-        while (std::getline(file, line)) {
-            if (line.empty()) continue;
-
-            if (line.substr(0, strlen(CURRENT_PATH_PREFIX)) == CURRENT_PATH_PREFIX) {
-                currentPath = line.substr(strlen(CURRENT_PATH_PREFIX));
-            } else if (line.substr(0, strlen(DIRECTORY_PREFIX)) == DIRECTORY_PREFIX) {
-                std::string dirPath = line.substr(strlen(DIRECTORY_PREFIX));
-                fs.createDirectory(dirPath);
-            } else if (line.substr(0, strlen(FILE_PREFIX)) == FILE_PREFIX) {
-                std::string filePath = line.substr(strlen(FILE_PREFIX));
-                
-                std::string content;
-                std::streampos currentPos = file.tellg();
-                std::string contentLine;
-                
-                while (std::getline(file, contentLine)) {
-                    if (contentLine.substr(0, strlen(DIRECTORY_PREFIX)) == DIRECTORY_PREFIX || 
-                        contentLine.substr(0, strlen(FILE_PREFIX)) == FILE_PREFIX || 
-                        contentLine.substr(0, strlen(CURRENT_PATH_PREFIX)) == CURRENT_PATH_PREFIX) {
-                        file.seekg(currentPos);
-                        break;
-                    }
-                    
-                    if (contentLine == END_MARKER) {
-                        break;
-                    }
-                    
-                    if (contentLine.length() >= strlen(END_MARKER) && 
-                        contentLine.substr(contentLine.length() - strlen(END_MARKER)) == END_MARKER) {
-                        contentLine = contentLine.substr(0, contentLine.length() - strlen(END_MARKER));
-                        if (!content.empty()) {
-                            content += "\n";
-                        }
-                        content += contentLine;
-                        break;
-                    }
-                    
-                    if (!content.empty()) {
-                        content += "\n";
-                    }
-                    content += contentLine;
-                    currentPos = file.tellg();
-                }
-                
-                fs.createFile(filePath, content);
-            }
-        }
-
-        file.close();
-
-        if (currentPath != "/") {
-            fs.changeDir(currentPath);
-        }
-    }
-
-    void serialize() override {}
-    void deserialize() override {}
-};
-
-std::unique_ptr<FileSystemPersistence> createFilePersistence(const std::string &filename) {
-    return std::make_unique<FilePersistence>(filename);
+  if (currentPath != "/") {
+    fs.changeDir(currentPath);
+  }
 }

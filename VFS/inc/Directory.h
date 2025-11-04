@@ -12,19 +12,19 @@ class Directory : public FileSystemComponent {
 public:
     explicit Directory(const std::string &name);
 
-    std::string getName() const override { return name; }
-    std::time_t getCreationTime() const override { return creationTime; }
-    std::time_t getModificationTime() const override { return modificationTime; }
+    std::string getName() const override;
+    std::time_t getCreationTime() const override;
+    std::time_t getModificationTime() const override;
     std::size_t getSize() const override;
-    FileSystemComponentType getComponentType() const override { return FileSystemComponentType::Directory; }
+    FileSystemComponentType getComponentType() const override;
 
-    bool isFile() const override { return false; }
-    bool isDirectory() const override { return true; }
+    bool isFile() const override;
+    bool isDirectory() const override;
 
     void addChild(std::shared_ptr<FileSystemComponent> child);
     bool removeChild(const std::string &name);
     std::shared_ptr<FileSystemComponent> getChild(const std::string &name) const;
-    const std::vector<std::shared_ptr<FileSystemComponent>> &getChildren() const { return children; }
+    const std::vector<std::shared_ptr<FileSystemComponent>> &getChildren() const;
     bool hasChild(const std::string &name) const;
 
     std::vector<std::shared_ptr<FileSystemComponent>> findByName(const std::string &name) const;

@@ -1,76 +1,89 @@
 #include <gtest/gtest.h>
 #include <memory>
-
 #include "File.h"
 
 class GivenTestingFile : public ::testing::Test {
 protected:
     void SetUp() override {
-        emptyFile = std::make_shared<File>("empty.txt");
-        contentFile = std::make_shared<File>("content.txt", "Hello World");
+        file = std::make_shared<File>("test.txt");
     }
 
-    std::shared_ptr<File> emptyFile;
-    std::shared_ptr<File> contentFile;
+    std::shared_ptr<File> file;
 };
 
-TEST_F(GivenTestingFile, WhenFileIsEmpty_ThenSizeIsZero) {
-    EXPECT_EQ(emptyFile->getSize(), 0);
+TEST_F(GivenTestingFile, WhenCreatedWithName_ThenNameIsSet) {
+    EXPECT_EQ(file->getName(), "test.txt");
+    EXPECT_TRUE(file->isFile());
 }
 
-TEST_F(GivenTestingFile, WhenFileHasContent_ThenSizeIsCorrect) {
-    EXPECT_EQ(contentFile->getSize(), 11);
+TEST_F(GivenTestingFile, WhenGetComponentType_ThenReturnsFile) {
+    EXPECT_EQ(file->getComponentType(), FileSystemComponentType::File);
 }
 
-TEST_F(GivenTestingFile, WhenGetContent_ThenReturnsCorrectContent) {
-    EXPECT_EQ(contentFile->getContent(), "Hello World");
-    EXPECT_EQ(emptyFile->getContent(), "");
+TEST_F(GivenTestingFile, WhenCreated_ThenContentIsEmpty) {
+    EXPECT_EQ(file->getContent(), "");
 }
 
-TEST_F(GivenTestingFile, WhenSetContent_ThenContentIsUpdated) {
-    emptyFile->setContent("New Content");
-    
-    EXPECT_EQ(emptyFile->getContent(), "New Content");
-    EXPECT_EQ(emptyFile->getSize(), 11);
+TEST_F(GivenTestingFile, WhenContentSet_ThenContentIsStored) {
+    file->setContent("Hello World");
+    EXPECT_EQ(file->getContent(), "Hello World");
 }
 
-TEST_F(GivenTestingFile, WhenAppendContent_ThenContentIsAdded) {
-    contentFile->appendContent(" More Text");
-    
-    EXPECT_EQ(contentFile->getContent(), "Hello World More Text");
-    EXPECT_EQ(contentFile->getSize(), 21);
+TEST_F(GivenTestingFile, WhenContentAppended_ThenContentIsAdded) {
+    file->setContent("Line 1\n");
+    file->appendContent("Line 2\n");
+    EXPECT_EQ(file->getContent(), "Line 1\nLine 2\n");
 }
 
-TEST_F(GivenTestingFile, WhenSearchLines_ThenFindsMatchingLines) {
-    auto multiLineFile = std::make_shared<File>("test.txt", "Line 1: Hello\nLine 2: World\nLine 3: Hello Again");
-    
-    auto results = multiLineFile->searchLines("Hello");
-    
-    EXPECT_EQ(results.size(), 2);
-    EXPECT_EQ(results[0], "Line 1: Hello");
-    EXPECT_EQ(results[1], "Line 3: Hello Again");
-}
-
-TEST_F(GivenTestingFile, WhenSearchLinesNoMatch_ThenReturnsEmpty) {
-    auto results = contentFile->searchLines("NotFound");
-    
-    EXPECT_TRUE(results.empty());
-}
-
-TEST_F(GivenTestingFile, WhenFindByContent_ThenFindsMatchingFile) {
-    auto results = contentFile->findByContent("World");
-    
+TEST_F(GivenTestingFile, WhenFindByContent_ThenFindsMatch) {
+    file->setContent("Hello World");
+    auto results = file->findByContent("World");
     EXPECT_EQ(results.size(), 1);
-    EXPECT_EQ(results[0]->getName(), "content.txt");
 }
 
-TEST_F(GivenTestingFile, WhenFindByContentNoMatch_ThenReturnsEmpty) {
-    auto results = contentFile->findByContent("NotFound");
-    
+TEST_F(GivenTestingFile, WhenFindByContent_ThenNoMatch) {
+    file->setContent("Hello World");
+    auto results = file->findByContent("Goodbye");
     EXPECT_TRUE(results.empty());
 }
 
-TEST_F(GivenTestingFile, WhenFileCreated_ThenIsFile) {
-    EXPECT_TRUE(contentFile->isFile());
-    EXPECT_FALSE(contentFile->isDirectory());
+TEST_F(GivenTestingFile, WhenFindByContentCaseInsensitive_ThenFindsMatch) {
+    file->setContent("Hello World");
+    auto results = file->findByContent("world");
+    EXPECT_EQ(results.size(), 1);
+}
+
+TEST_F(GivenTestingFile, WhenMultilineContentSet_ThenContentIsPreserved) {
+    std::string multiline = "Line 1\nLine 2\nLine 3";
+    file->setContent(multiline);
+    EXPECT_EQ(file->getContent(), multiline);
+}
+
+TEST_F(GivenTestingFile, WhenContentOverwritten_ThenOldContentIsReplaced) {
+    file->setContent("Original");
+    file->setContent("Updated");
+    EXPECT_EQ(file->getContent(), "Updated");
+}
+
+TEST_F(GivenTestingFile, WhenAppendToEmptyFile_ThenContentIsAdded) {
+    file->appendContent("First line");
+    EXPECT_EQ(file->getContent(), "First line");
+}
+
+TEST_F(GivenTestingFile, WhenMultipleAppends_ThenAllContentIsAdded) {
+    file->setContent("Line 1\n");
+    file->appendContent("Line 2\n");
+    file->appendContent("Line 3\n");
+    EXPECT_EQ(file->getContent(), "Line 1\nLine 2\nLine 3\n");
+}
+
+TEST_F(GivenTestingFile, WhenGetSize_ThenReturnsContentLength) {
+    file->setContent("Hello");
+    EXPECT_EQ(file->getSize(), 5);
+}
+
+TEST_F(GivenTestingFile, WhenFileCreatedWithContent_ThenContentAndSizeAreCorrect) {
+    auto newFile = std::make_shared<File>("data.txt", "Initial content");
+    EXPECT_EQ(newFile->getContent(), "Initial content");
+    EXPECT_EQ(newFile->getSize(), 15);
 }

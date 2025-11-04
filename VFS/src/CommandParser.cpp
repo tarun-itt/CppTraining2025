@@ -1,18 +1,13 @@
 #include <algorithm>
 #include <cctype>
 
-#include "../inc/CommandParser.h"
+#include "CommandParser.h"
 
 ParsedCommand CommandParser::parse(const std::string &input) const {
     ParsedCommand result;
     result.isValid = false;
 
     std::vector<std::string> tokens = tokenize(input);
-    
-    if (tokens.empty()) {
-        result.errorMessage = "No command entered";
-        return result;
-    }
 
     result.name = tokens[0];
     result.args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
@@ -52,8 +47,6 @@ std::vector<std::string> CommandParser::tokenize(const std::string &input) const
             if (i + 1 < input.length() && input[i + 1] == '>') {
                 tokens.push_back(">>");
                 i++;
-            } else {
-                tokens.push_back(">");
             }
         } else {
             current += c;
@@ -69,7 +62,7 @@ std::vector<std::string> CommandParser::tokenize(const std::string &input) const
 
 bool CommandParser::validateCommand(const std::string &commandName) const {
     static const std::vector<std::string> validCommands = {
-        "cat", "cd", "echo", "find", "grep", "help", "ls", "mkdir", "pwd", "rm", "touch"
+        "cat", "cd", "echo", "find", "grep", "help", "ls", "mkdir", "rm", "touch"
     };
 
     return std::find(validCommands.begin(), validCommands.end(), commandName) != validCommands.end();
@@ -84,7 +77,6 @@ bool CommandParser::validateArguments(const std::string &commandName, const std:
     if (commandName == "help") return args.size() <= 1;
     if (commandName == "ls") return validateLsArgs(args);
     if (commandName == "mkdir") return validateMkdirArgs(args);
-    if (commandName == "pwd") return args.empty();
     if (commandName == "rm") return validateRmArgs(args);
     if (commandName == "touch") return validateTouchArgs(args);
 
@@ -106,12 +98,12 @@ bool CommandParser::validateCdArgs(const std::vector<std::string> &args) const {
 }
 
 bool CommandParser::validateEchoArgs(const std::vector<std::string> &args) const {
-    if (args.empty()) return false;
-    
-    for (size_t i = 0; i < args.size(); ++i) {
-        if (args[i] == ">>" || args[i] == ">") {
-            return i + 1 < args.size();
-        }
+    if (args.empty()) {
+        return false;
+    }
+
+    if (args.size() >= 2 && args[args.size() - 2] != ">>") {
+        return false;
     }
     
     return true;
