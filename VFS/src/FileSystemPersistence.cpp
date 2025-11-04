@@ -34,14 +34,13 @@ std::string readFileContent(std::ifstream &in, size_t contentSize) {
   return content;
 }
 
-void saveDirectory(std::ofstream &out,
-                   const std::shared_ptr<Directory> &dir,
+void saveDirectory(std::ofstream &out, const std::shared_ptr<Directory> &dir,
                    const std::string &path) {
   auto children = dir->getChildren();
 
   for (const auto &child : children) {
-    std::string childPath = (path == "/") ? "/" + child->getName()
-                                          : path + "/" + child->getName();
+    std::string childPath =
+        (path == "/") ? "/" + child->getName() : path + "/" + child->getName();
 
     if (child->isDirectory()) {
       out << DIRECTORY_PREFIX << childPath << '\n';
@@ -57,9 +56,9 @@ void saveDirectory(std::ofstream &out,
     }
   }
 }
-}
+} // namespace
 
-FileSystemPersistence::FileSystemPersistence(const std::string &filename) 
+FileSystemPersistence::FileSystemPersistence(const std::string &filename)
     : filename(filename) {}
 
 void FileSystemPersistence::saveFileSystem(const FileSystem &fs) {
